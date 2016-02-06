@@ -153,7 +153,7 @@ l91_sulu_website_user:
                 templates:
                     form: '::templates/security/confirmation.html.twig'
                     admin: ~
-                    user: '::templates/security/emails/confirmation-user.html.twig'
+                    user: ~
             password_forget:
                 from: ~
                 to: ~
