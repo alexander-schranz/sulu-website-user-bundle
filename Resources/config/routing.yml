@@ -1,0 +1,46 @@
+# Login
+l91_sulu_website_user.login:
+    path: /login
+    defaults:
+        _controller: L91SuluWebsiteUserBundle:Login:login
+
+l91_sulu_website_user.login_check:
+    path: /login-check
+    # no controller is bound to this route
+    # as it's handled by the Security system
+
+# Logout
+l91_sulu_website_user.logout:
+    path: /logout
+    # no controller is bound to this route
+    # as it's handled by the Security system
+
+# Password Forget
+l91_sulu_website_user.password_forget:
+    path: /password-forget
+    defaults:
+        _controller: L91SuluWebsiteUserBundle:PasswordForget:forget
+
+# Password Reset
+l91_sulu_website_user.password-reset:
+    path: /password-reset/{userId}/{passwordResetToken}
+    defaults:
+        _controller: L91SuluWebsiteUserBundle:PasswordReset:reset
+
+# Registration
+l91_sulu_website_user.registration:
+    path: /registration
+    defaults:
+        _controller: L91SuluWebsiteUserBundle:Registration:registration
+
+# Confirmation
+l91_sulu_website_user.confirmation:
+    path: /confirmation/{confirmationToken}
+    defaults:
+        _controller: L91SuluWebsiteUserBundle:Confirmation:confirmation
+
+# Profile
+l91_sulu_website_user.profile:
+    path: /profile
+    defaults:
+        _controller: L91SuluWebsiteUserBundle:Profile:profile

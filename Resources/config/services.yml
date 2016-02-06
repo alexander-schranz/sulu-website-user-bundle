@@ -1,0 +1,14 @@
+services:
+    # Form Loader
+    l91_sulu_website_user.form_type.loader:
+        class: L91\Sulu\Bundle\WebsiteUserBundle\Loader\FormTypeLoader
+
+    # Form Handler
+    l91_sulu_website_user.form.handler:
+        class: L91\Sulu\Bundle\WebsiteUserBundle\Form\Handler
+        arguments: [@sulu_security.salt_generator, @security.encoder_factory, @doctrine.orm.entity_manager]
+
+    # Mail Helper
+    l91_sulu_website_user.mail_helper:
+        class: L91\Sulu\Bundle\WebsiteUserBundle\Mail\MailHelper
+        arguments: [@mailer]
