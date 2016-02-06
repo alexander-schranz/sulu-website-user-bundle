@@ -79,17 +79,17 @@ sulu_security:
 
 ### 5. Create your Templates
 
-Create the following templates in your theme under `<your_theme>/templates`
+Create the following templates in your theme under `<your_theme>/templates/security`
 
- - login.html.twig
- - registration.html.twig
- - emails/registration-user.html.twig
- - confirmation.html.twig
- - password-forget.html.twig
- - emails/password-forget-user.html.twig
- - password-reset.html.twig
- - emails/password-reset-user.html.twig
- - profile.html.twig
+ - `login.html.twig`
+ - `registration.html.twig`
+ - `emails/registration-user.html.twig`
+ - `confirmation.html.twig`
+ - `password-forget.html.twig`
+ - `emails/password-forget-user.html.twig`
+ - `password-reset.html.twig`
+ - `emails/password-reset-user.html.twig`
+ - `profile.html.twig`
  
 **Update Liip Theme Bundle with your Bundle**
 
@@ -106,7 +106,7 @@ liip_theme:
 
 **Basic:**
 
-```
+```yml
 l91_sulu_website_user:
     webspaces:
         <webspace_key>:
@@ -120,7 +120,7 @@ l91_sulu_website_user:
     webspaces:
         <webspace_key>:
             from: no-reply@example.at
-            to: admin@example.at
+            to: ~
             reply_to: ~
             subject: ~
             login:
@@ -129,60 +129,60 @@ l91_sulu_website_user:
                 reply_to: ~
                 subject: ~
                 templates:
-                    form: '::templates/login.html.twig'
-                    form_embed: '::templates/embed/login.html.twig'
+                    form: '::templates/security/login.html.twig'
+                    form_embed: '::templates/security/embed/login.html.twig'
                     admin: ~
                     user: ~
             registration:
-                from: no-reply@example.at
+                from: ~
                 to: ~
                 reply_to: ~
                 subject: ~
                 activate_user: false
                 form_type: 'L91\Sulu\Bundle\WebsiteUserBundle\Form\Type\RegistrationType'
                 templates:
-                    form: '::templates/registration.html.twig'
+                    form: '::templates/security/registration.html.twig'
                     admin: ~
-                    user: '::templates/emails/registration-user.html.twig'
+                    user: '::templates/security/emails/registration-user.html.twig'
             confirmation:
-                from: no-reply@example.at
+                from: ~
                 to: ~
                 reply_to: ~
                 subject: ~
                 activate_user: true
                 form_type: 'L91\Sulu\Bundle\WebsiteUserBundle\Form\Type\ConfirmationType'
                 templates:
-                    form: '::templates/confirmation.html.twig'
+                    form: '::templates/security/confirmation.html.twig'
                     admin: ~
-                    user: '::templates/emails/confirmation-user.html.twig'
+                    user: '::templates/security/emails/confirmation-user.html.twig'
             password_forget:
-                from: no-reply@example.at
+                from: ~
                 to: ~
                 reply_to: ~
                 subject: ~
                 form_type: 'L91\Sulu\Bundle\WebsiteUserBundle\Form\Type\PasswordForgetType'
                 templates:
-                    form: '::templates/password-forget.html.twig'
+                    form: '::templates/security/password-forget.html.twig'
                     admin: ~
-                    user: '::templates/emails/password-forget-user.html.twig'
+                    user: '::templates/security/emails/password-forget-user.html.twig'
             password_reset:
-                from: no-reply@example.at
+                from: ~
                 to: ~
                 reply_to: ~
                 subject: ~
                 form_type: 'L91\Sulu\Bundle\WebsiteUserBundle\Form\Type\PasswordResetType'
                 templates:
-                    form: '::templates/password-reset.html.twig'
+                    form: '::templates/security/password-reset.html.twig'
                     admin: ~
                     user: ~
             profile:
-                from: no-reply@example.at
+                from: ~
                 to: ~
                 reply_to: ~
                 subject: ~
                 form_type: 'L91\Sulu\Bundle\WebsiteUserBundle\Form\Type\ProfileType'
                 templates:
-                    form: '::templates/profile.html.twig'
+                    form: '::templates/security/profile.html.twig'
                     admin: ~
                     user: ~
 ```
