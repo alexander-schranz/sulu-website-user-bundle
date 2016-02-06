@@ -83,13 +83,12 @@ Create the following templates in your theme under `<your_theme>/templates/secur
 
  - `login.html.twig`
  - `registration.html.twig`
- - `emails/registration-user.html.twig`
  - `confirmation.html.twig`
  - `password-forget.html.twig`
- - `emails/password-forget-user.html.twig`
  - `password-reset.html.twig`
- - `emails/password-reset-user.html.twig`
  - `profile.html.twig`
+ - `emails/registration-user.html.twig`
+ - `emails/password-forget-user.html.twig`
  
 **Update Liip Theme Bundle with your Bundle**
 

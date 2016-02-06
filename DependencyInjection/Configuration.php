@@ -141,7 +141,7 @@ class Configuration implements ConfigurationInterface
                                         ->children()
                                             ->scalarNode(self::TEMPLATE_FORM)->defaultValue('::templates/security/confirmation.html.twig')->end()
                                             ->scalarNode(self::TEMPLATE_ADMIN)->defaultValue(null)->end()
-                                            ->scalarNode(self::TEMPLATE_USER)->defaultValue('::templates/security/emails/confirmation-user.html.twig')->end()
+                                            ->scalarNode(self::TEMPLATE_USER)->defaultValue(null)->end()
                                         ->end()
                                     ->end()
                                 ->end()
