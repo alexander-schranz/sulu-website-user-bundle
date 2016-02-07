@@ -29,27 +29,17 @@ class ContactType extends AbstractContactType
             'required' => false,
         ]);
 
-        /*
-        $builder->add(
-            'contactAddresses',
-            new ContactAddressType(),
-            [
-                'by_reference' => true,
-            ]
-        );
-        */
-
-        $builder->add(
-            'contactAddresses',
-            'collection',
-            [
-                'label' => false,
-                'type' => new ContactAddressType(),
-                'options' => [
+        if ($options['contact_address_type'] && $options['address_type']) {
+            $builder->add(
+                'contactAddresses',
+                'collection',
+                [
                     'label' => false,
-                ],
-            ]
-        );
+                    'type' => new $options['contact_address_type'](),
+                    'options' => $options['contact_address_type_options'],
+                ]
+            );
+        }
     }
 
     public function getName()

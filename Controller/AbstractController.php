@@ -57,6 +57,23 @@ abstract class AbstractController extends Controller
         $defaultOptions = [
             'locale' => $request->getLocale(),
             'locales' => $this->getWebSpaceLocales(),
+            'type' => $type,
+            // TODO allow overwrite of options foreach webspace
+            'contact_type_options' => [
+                'label' => false,
+                'type' => $type,
+                'locale' => $request->getLocale(),
+            ],
+            'contact_address_type_options' => [
+                'label' => false,
+                'type' => $type,
+                'locale' => $request->getLocale(),
+            ],
+            'address_type_options' => [
+                'label' => false,
+                'type' => $type,
+                'locale' => $request->getLocale(),
+            ],
         ];
 
         $options = array_merge($defaultOptions, $options);

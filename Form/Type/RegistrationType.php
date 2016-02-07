@@ -28,7 +28,7 @@ class RegistrationType extends AbstractUserType
             'mapped'      => false,
         ]);
 
-        $builder->add('contact', new ContactType(), ['label' => false]);
+        $builder->add('contact', new $options['contact_type'], $options['contact_type_options']);
 
         $builder->add('submit', 'submit');
     }

@@ -17,7 +17,9 @@ abstract class AbstractAddressType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => Address::class
+            'data_class' => Address::class,
+            'type' => null,
+            'locale' => null,
         ));
     }
 }
