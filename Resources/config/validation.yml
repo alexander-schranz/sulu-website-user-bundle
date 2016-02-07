@@ -9,3 +9,15 @@ Sulu\Bundle\SecurityBundle\Entity\BaseUser:
             - NotBlank: ~
         email:
             - Email: ~
+
+Sulu\Bundle\SecurityBundle\Entity\ContactInterface:
+    properties:
+        first_name:
+            - NotBlank: ~
+        last_name:
+            - NotBlank: ~
+
+Sulu\Bundle\SecurityBundle\Entity\Address:
+    properties:
+        country:
+            - NotBlank: ~

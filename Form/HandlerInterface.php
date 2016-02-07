@@ -17,11 +17,4 @@ interface HandlerInterface
      * @throws \Exception
      */
     public function handle(Form $form, $type, $webSpaceKey);
-
-    /**
-     * @param string $type
-     * @param string $webSpaceKey
-     * @param string $handler
-     */
-    public function add($type, $webSpaceKey, $handler);
 }

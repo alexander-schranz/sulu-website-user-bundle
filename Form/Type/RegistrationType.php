@@ -5,7 +5,7 @@ namespace L91\Sulu\Bundle\WebsiteUserBundle\Form\Type;
 use L91\Sulu\Bundle\WebsiteUserBundle\DependencyInjection\Configuration;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class RegistrationType extends AbstractType
+class RegistrationType extends AbstractUserType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -21,12 +21,14 @@ class RegistrationType extends AbstractType
             $builder->add('locale', 'hidden', ['data' => $options['locale']]);
         }
 
-        $builder->add('plainPassword', 'repeated', array(
+        $builder->add('plainPassword', 'repeated', [
             'first_name'  => 'password',
             'second_name' => 'confirm',
             'type'        => 'password',
             'mapped'      => false,
-        ));
+        ]);
+
+        $builder->add('contact', new ContactType(), ['label' => false]);
 
         $builder->add('submit', 'submit');
     }
