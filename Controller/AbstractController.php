@@ -4,11 +4,10 @@ namespace L91\Sulu\Bundle\WebsiteUserBundle\Controller;
 
 use L91\Sulu\Bundle\WebsiteUserBundle\DependencyInjection\Configuration;
 use L91\Sulu\Bundle\WebsiteUserBundle\Form\HandlerInterface;
-use L91\Sulu\Bundle\WebsiteUserBundle\Form\Type\AbstractType;
-use L91\Sulu\Bundle\WebsiteUserBundle\Loader\FormTypeLoaderInterface;
 use L91\Sulu\Bundle\WebsiteUserBundle\Mail\MailHelperInterface;
 use Sulu\Bundle\SecurityBundle\Entity\BaseUser;
 use Sulu\Bundle\WebsiteBundle\Resolver\RequestAnalyzerResolverInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
@@ -28,11 +27,6 @@ abstract class AbstractController extends Controller
      * @var RequestAnalyzerResolverInterface
      */
     private $requestAnalyzerResolver;
-
-    /**
-     * @var FormTypeLoaderInterface
-     */
-    private $formTypeLoader;
 
     /**
      * @var HandlerInterface
@@ -58,7 +52,7 @@ abstract class AbstractController extends Controller
             'locale' => $request->getLocale(),
             'locales' => $this->getWebSpaceLocales(),
             'type' => $type,
-            // TODO allow overwrite of options foreach webspace
+            // TODO allow overwrite of options foreach WebSpace
             'contact_type_options' => [
                 'label' => false,
                 'type' => $type,
@@ -82,7 +76,10 @@ abstract class AbstractController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($this->handleFormSubmit($form, $type)) {
+            if ($entity = $this->handleFormSubmit($form, $type)) {
+
+                $this->postFormHandle($entity);
+
                 return new RedirectResponse(
                     $request->getPathInfo() . '?send=true'
                 );
@@ -98,10 +95,18 @@ abstract class AbstractController extends Controller
     }
 
     /**
+     * @param UserInterface $user
+     */
+    protected function postFormHandle(UserInterface $user)
+    {
+        // Controller specific implementation
+    }
+
+    /**
      * @param Form $form
      * @param string $type
      *
-     * @return bool
+     * @return UserInterface
      *
      * @throws \Exception
      */
@@ -171,6 +176,32 @@ abstract class AbstractController extends Controller
                 $user->getEmail()
             );
         }
+    }
+
+    /**
+     * @return string
+     */
+    protected function getWebSpaceSystem()
+    {
+        $system = null;
+
+        if ($webSpace = $this->getRequestAnalyser()->getWebspace()) {
+            $security = $webSpace->getSecurity();
+
+            if ($security) {
+                $system = $security->getSystem();
+            }
+        }
+
+        return $system;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getRoleName()
+    {
+        return $this->getConfig(null, Configuration::ROLE);
     }
 
     /**

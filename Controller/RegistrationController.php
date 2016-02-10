@@ -2,11 +2,14 @@
 
 namespace L91\Sulu\Bundle\WebsiteUserBundle\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use L91\Sulu\Bundle\WebsiteUserBundle\DependencyInjection\Configuration;
-use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
+use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Bundle\SecurityBundle\Entity\UserRole;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class RegistrationController extends AbstractController
@@ -32,5 +35,48 @@ class RegistrationController extends AbstractController
             Configuration::TYPE_REGISTRATION,
             $user
         );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function postFormHandle(UserInterface $user)
+    {
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $this->get('doctrine.orm.entity_manager');
+        $roleRepository = $entityManager->getRepository(Role::class);
+
+        $system = $this->getWebSpaceSystem();
+
+        // only create role when system found
+        if ($system) {
+            // find role
+            $roleName = $this->getRoleName();
+            $role = $roleRepository->findBy([
+                'system' => $system,
+                'name' => $roleName
+            ]);
+
+            // create role when not exists
+            if (!$role) {
+                /** @var Role $role */
+                $role = $roleRepository->createNew();
+                $role->setSystem($system);
+                $role->setName($roleName);
+
+                $entityManager->persist($role);
+            }
+
+            // create new user roles
+            $userRole = new UserRole();
+            $userRole->setRole($role);
+            $userRole->setUser($user);
+            $locales = json_encode(array_values($this->getWebSpaceLocales()));
+            $userRole->setLocale($locales);
+            $entityManager->persist($userRole);
+
+            // save role and user role
+            $entityManager->flush();
+        }
     }
 }

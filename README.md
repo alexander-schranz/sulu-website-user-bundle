@@ -122,6 +122,7 @@ l91_sulu_website_user:
             to: ~
             reply_to: ~
             subject: ~
+            role: Website
             login:
                 from: ~
                 to: ~

@@ -34,6 +34,8 @@ class L91SuluWebsiteUserExtension extends Extension
             foreach (Configuration::$MAIL_CONFIGS as $mailConfig) {
                 $this->setParameter($container, $mailConfig, $webSpaceConfig[$mailConfig]);
             }
+            // Set WebSpace Role Name
+            $this->setParameter($container, Configuration::ROLE, $webSpaceConfig[Configuration::ROLE]);
             // Set WebSpace Type Config
             foreach (Configuration::$TYPES as $type) {
                 $typeConfig = $webSpaceConfig[$type];

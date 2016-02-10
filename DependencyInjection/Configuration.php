@@ -29,6 +29,8 @@ class Configuration implements ConfigurationInterface
     const MAIL_REPLY_TO = 'reply_to';
     const MAIL_SUBJECT = 'subject';
 
+    const ROLE = 'role';
+
     const ACTIVATE_USER = 'activate_user';
 
     const FORM_TYPE = 'form_type';
@@ -78,6 +80,7 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode(self::MAIL_TO)->defaultValue(null)->end()
                             ->scalarNode(self::MAIL_REPLY_TO)->defaultValue(null)->end()
                             ->scalarNode(self::MAIL_SUBJECT)->defaultValue(null)->end()
+                            ->scalarNode(self::ROLE)->defaultValue('Website')->end()
                             // Login
                             ->arrayNode(self::TYPE_LOGIN)
                                 ->addDefaultsIfNotSet()
