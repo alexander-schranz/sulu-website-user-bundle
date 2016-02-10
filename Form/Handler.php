@@ -85,6 +85,10 @@ class Handler implements HandlerInterface
                 $this->persistContact($user);
             }
 
+            if ($type === Configuration::TYPE_REGISTRATION) {
+                $user->setConfirmationKey($this->getRandomSalt());
+            }
+
             $this->entityManager->persist($user);
             $this->entityManager->flush();
         }
