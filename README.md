@@ -123,6 +123,10 @@ l91_sulu_website_user:
             reply_to: ~
             subject: ~
             role: Website
+            form_types:
+                contact: L91\Sulu\Bundle\WebsiteUserBundle\Form\Type\ContactType
+                contact_address: L91\Sulu\Bundle\WebsiteUserBundle\Form\Type\ContactAddressType
+                address: L91\Sulu\Bundle\WebsiteUserBundle\Form\Type\ContactAddressType
             login:
                 from: ~
                 to: ~

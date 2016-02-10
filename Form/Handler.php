@@ -62,23 +62,32 @@ class Handler implements HandlerInterface
     {
         $user = $form->getData();
 
-        if ($user instanceof BaseUser) {
-            // set locale when not exist
-            if (!$user->getLocale()) {
-                $user->setLocale('en');
+        if (in_array(
+            $type, [
+                Configuration::TYPE_REGISTRATION,
+                Configuration::TYPE_PASSWORD_RESET,
+                Configuration::TYPE_PROFILE,
+                Configuration::TYPE_CONFIRMATION,
+            ]
+        )) {
+            if ($user instanceof BaseUser) {
+                // set locale when not exist
+                if (!$user->getLocale()) {
+                    $user->setLocale('en');
+                }
+
+                // set password when new or changed
+                $this->setPasswordAndSalt($form, $user, $type);
             }
 
-            // set password when new or changed
-            $this->setPasswordAndSalt($form, $user, $type);
-        }
+            if ($user instanceof User) {
+                // save contact and address when exists
+                $this->persistContact($user);
+            }
 
-        if ($user instanceof User) {
-            // save contact and address when exists
-            $this->persistContact($user);
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
         }
-
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
 
         return $user;
     }

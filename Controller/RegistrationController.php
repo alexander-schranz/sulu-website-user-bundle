@@ -2,10 +2,10 @@
 
 namespace L91\Sulu\Bundle\WebsiteUserBundle\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
 use L91\Sulu\Bundle\WebsiteUserBundle\DependencyInjection\Configuration;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
+use Sulu\Bundle\SecurityBundle\Entity\BaseUser;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
@@ -42,8 +42,7 @@ class RegistrationController extends AbstractController
      */
     protected function postFormHandle(UserInterface $user)
     {
-        /** @var EntityManagerInterface $entityManager */
-        $entityManager = $this->get('doctrine.orm.entity_manager');
+        $entityManager = $this->getEntityManager();
         $roleRepository = $entityManager->getRepository(Role::class);
 
         $system = $this->getWebSpaceSystem();
@@ -75,8 +74,10 @@ class RegistrationController extends AbstractController
             $userRole->setLocale($locales);
             $entityManager->persist($userRole);
 
-            // save role and user role
+            // save user, role and user role
             $entityManager->flush();
         }
+
+        return $user;
     }
 }

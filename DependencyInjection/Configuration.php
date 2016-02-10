@@ -2,6 +2,9 @@
 
 namespace L91\Sulu\Bundle\WebsiteUserBundle\DependencyInjection;
 
+use L91\Sulu\Bundle\WebsiteUserBundle\Form\Type\AddressType;
+use L91\Sulu\Bundle\WebsiteUserBundle\Form\Type\ContactAddressType;
+use L91\Sulu\Bundle\WebsiteUserBundle\Form\Type\ContactType;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -33,12 +36,23 @@ class Configuration implements ConfigurationInterface
 
     const ACTIVATE_USER = 'activate_user';
 
+    const FORM_TYPES = 'form_types';
+    const FORM_TYPE_CONTACT = 'contact';
+    const FORM_TYPE_CONTACT_ADDRESS = 'contact_address';
+    const FORM_TYPE_ADDRESS = 'address';
+
     const FORM_TYPE = 'form_type';
     const TEMPLATES = 'templates';
     const TEMPLATE_FORM = 'form';
     const TEMPLATE_FORM_EMBED = 'form_embed';
     const TEMPLATE_ADMIN = 'admin';
     const TEMPLATE_USER = 'user';
+
+    public static $FORM_TYPES = [
+        self::FORM_TYPE_CONTACT,
+        self::FORM_TYPE_CONTACT_ADDRESS,
+        self::FORM_TYPE_ADDRESS,
+    ];
 
     public static $TYPES = [
         self::TYPE_LOGIN,
@@ -81,6 +95,16 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode(self::MAIL_REPLY_TO)->defaultValue(null)->end()
                             ->scalarNode(self::MAIL_SUBJECT)->defaultValue(null)->end()
                             ->scalarNode(self::ROLE)->defaultValue('Website')->end()
+                            // Form Types
+                            ->arrayNode(self::FORM_TYPES)
+                                ->addDefaultsIfNotSet()
+                                ->children()
+                                    // Contact, ContactAddress, Address Form Types
+                                    ->scalarNode(self::FORM_TYPE_CONTACT)->defaultValue(ContactType::class)->end()
+                                    ->scalarNode(self::FORM_TYPE_CONTACT_ADDRESS)->defaultValue(ContactAddressType::class)->end()
+                                    ->scalarNode(self::FORM_TYPE_ADDRESS)->defaultValue(AddressType::class)->end()
+                                ->end()
+                            ->end()
                             // Login
                             ->arrayNode(self::TYPE_LOGIN)
                                 ->addDefaultsIfNotSet()

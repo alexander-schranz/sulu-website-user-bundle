@@ -2,6 +2,7 @@
 
 namespace L91\Sulu\Bundle\WebsiteUserBundle\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use L91\Sulu\Bundle\WebsiteUserBundle\DependencyInjection\Configuration;
 use L91\Sulu\Bundle\WebsiteUserBundle\Form\HandlerInterface;
 use L91\Sulu\Bundle\WebsiteUserBundle\Mail\MailHelperInterface;
@@ -39,6 +40,11 @@ abstract class AbstractController extends Controller
     protected $mailHelper;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
      * @param Request $request
      * @param string $type
      * @param mixed $data
@@ -48,11 +54,46 @@ abstract class AbstractController extends Controller
      */
     protected function handleForm(Request $request, $type, $data = null, array $options = [])
     {
+        $options = $this->getFormOptions($request, $type, $options);
+
+        $form = $this->createForm($this->getFormType($type), $data, $options);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($entity = $this->handleFormSubmit($form, $type)) {
+                $user = $this->postFormHandle($entity);
+                $user = $this->activateUser($user, $type);
+                $this->sendMails($type, $user);
+
+                return new RedirectResponse(
+                    $request->getPathInfo() . '?send=true'
+                );
+            }
+        }
+
+        return $this->render(
+            $this->getTemplate($type, Configuration::TEMPLATE_FORM),
+            [
+                'form' => $form->createView(),
+            ]
+        );
+    }
+
+    /**
+     * @param Request $request
+     * @param $type
+     * @param $options
+     *
+     * @return array
+     */
+    protected function getFormOptions(Request $request, $type, $options) {
         $defaultOptions = [
             'locale' => $request->getLocale(),
             'locales' => $this->getWebSpaceLocales(),
             'type' => $type,
-            // TODO allow overwrite of options foreach WebSpace
+            'contact_type' => $this->getConfig(Configuration::FORM_TYPES, Configuration::FORM_TYPE_CONTACT),
+            'contact_address_type' => $this->getConfig(Configuration::FORM_TYPES, Configuration::FORM_TYPE_CONTACT_ADDRESS),
+            'address_type' => $this->getConfig(Configuration::FORM_TYPES, Configuration::FORM_TYPE_ADDRESS),
             'contact_type_options' => [
                 'label' => false,
                 'type' => $type,
@@ -70,36 +111,17 @@ abstract class AbstractController extends Controller
             ],
         ];
 
-        $options = array_merge($defaultOptions, $options);
-
-        $form = $this->createForm($this->getFormType($type), $data, $options);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($entity = $this->handleFormSubmit($form, $type)) {
-
-                $this->postFormHandle($entity);
-
-                return new RedirectResponse(
-                    $request->getPathInfo() . '?send=true'
-                );
-            }
-        }
-
-        return $this->render(
-            $this->getTemplate($type, Configuration::TEMPLATE_FORM),
-            [
-                'form' => $form->createView(),
-            ]
-        );
+        return array_merge($defaultOptions, $options);
     }
 
     /**
      * @param UserInterface $user
+     *
+     * @return UserInterface
      */
     protected function postFormHandle(UserInterface $user)
     {
-        // Controller specific implementation
+        return $user;
     }
 
     /**
@@ -118,133 +140,70 @@ abstract class AbstractController extends Controller
     }
 
     /**
-     * {@inheritdoc}
+     * TODO directly in form
+     *
+     * @param UserInterface $user
+     * @param $type
+     *
+     * @return UserInterface
      */
-    public function render($view, array $parameters = array(), Response $response = null)
+    protected function activateUser(UserInterface $user, $type)
     {
-        return parent::render(
-            $view,
-            $this->getTemplateAttributes($parameters),
-            $response
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function renderView($view, array $parameters = array())
-    {
-        return parent::renderView($view, $this->getTemplateAttributes($parameters));
-    }
-
-    /**
-     * @param string $type
-     * @param BaseUser $user
-     */
-    protected function sendMails(
-        $type,
-        BaseUser $user
-    ) {
-        $from = $this->getConfig($type, Configuration::MAIL_FROM);
-        $to = $this->getConfig($type, Configuration::MAIL_TO);
-        $subject = $this->getConfig($type, Configuration::MAIL_SUBJECT);
-        $replyTo = $this->getConfig($type, Configuration::MAIL_REPLY_TO);
-
-        $adminTemplate = $this->getTemplate($type, Configuration::TEMPLATE_ADMIN);
-        $userTemplate = $this->getTemplate($type, Configuration::TEMPLATE_USER);
-
-        if ($userTemplate) {
-            $body = $this->renderView($userTemplate, ['user' => $user]);
-
-            $this->getMailHelper()->send(
-                $from,
-                $user->getEmail(),
-                $subject,
-                $body,
-                $replyTo
-            );
-        }
-
-        if ($adminTemplate) {
-            $body = $this->renderView($adminTemplate, ['user' => $user]);
-
-            $this->getMailHelper()->send(
-                $from,
-                $to,
-                $subject,
-                $body,
-                $user->getEmail()
-            );
-        }
-    }
-
-    /**
-     * @return string
-     */
-    protected function getWebSpaceSystem()
-    {
-        $system = null;
-
-        if ($webSpace = $this->getRequestAnalyser()->getWebspace()) {
-            $security = $webSpace->getSecurity();
-
-            if ($security) {
-                $system = $security->getSystem();
+        if ($this->getConfig($type, Configuration::ACTIVATE_USER)) {
+            if ($user instanceof BaseUser) {
+                $user->setEnabled(true);
+                $this->entityManager->persist($user);
+                $this->entityManager->flush();
             }
         }
 
-        return $system;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getRoleName()
-    {
-        return $this->getConfig(null, Configuration::ROLE);
-    }
-
-    /**
-     * @param $type
-     * @param $key
-     *
-     * @return string
-     */
-    protected function getConfig($type, $key)
-    {
-        return $this->container->getParameter(
-            Configuration::ROOT . '.' .
-            $this->getWebSpaceKey() .
-            ($type ? '.' . $type : '') . '.'
-            . $key
-        );
-    }
-
-    /**
-     * @param $type
-     *
-     * @return string
-     */
-    protected function getFormType($type)
-    {
-        $type = $this->getConfig($type, Configuration::FORM_TYPE);
-
-        if (!$type) {
-            throw new NotFoundHttpException('Form not found');
-        }
-
-        return new $type();
+        return $user;
     }
 
     /**
      * @param string $type
-     * @param string $template
-     *
-     * @return string
+     * @param UserInterface $user
      */
-    protected function getTemplate($type, $template)
-    {
-        return $this->getConfig($type, Configuration::TEMPLATES . '.' . $template);
+    protected function sendMails(
+        $type,
+        UserInterface $user
+    ) {
+        if ($user instanceof BaseUser) {
+            // get WebSpace type specific config
+            $from = $this->getConfig($type, Configuration::MAIL_FROM);
+            $to = $this->getConfig($type, Configuration::MAIL_TO);
+            $subject = $this->getConfig($type, Configuration::MAIL_SUBJECT);
+            $replyTo = $this->getConfig($type, Configuration::MAIL_REPLY_TO);
+
+            $adminTemplate = $this->getTemplate($type, Configuration::TEMPLATE_ADMIN);
+            $userTemplate = $this->getTemplate($type, Configuration::TEMPLATE_USER);
+
+            if ($userTemplate) {
+                // send email to user
+                $body = $this->renderView($userTemplate, ['user' => $user]);
+
+                $this->getMailHelper()->send(
+                    $from,
+                    $user->getEmail(),
+                    $subject,
+                    $body,
+                    $replyTo
+                );
+            }
+
+            if ($adminTemplate) {
+                // send email to admin
+                $body = $this->renderView($adminTemplate, ['user' => $user]);
+
+                $this->getMailHelper()->send(
+                    $from,
+                    $to,
+                    $subject,
+                    $body,
+                    $user->getEmail()
+                );
+            }
+        }
     }
 
     /**
@@ -276,6 +235,62 @@ abstract class AbstractController extends Controller
     }
 
     /**
+     * @return string
+     */
+    protected function getRoleName()
+    {
+        return $this->getConfig(null, Configuration::ROLE);
+    }
+
+    /**
+     * @param $type
+     * @param $key
+     *
+     * @return string
+     */
+    protected function getConfig($type, $key)
+    {
+        $parameter =
+            Configuration::ROOT . '.' .
+            $this->getWebSpaceKey() .
+            ($type ? '.' . $type : '') . '.'
+            . $key;
+
+        if (!$this->container->hasParameter($parameter)) {
+            return null;
+        }
+
+        return $this->container->getParameter($parameter);
+    }
+
+    /**
+     * @param $type
+     *
+     * @return string
+     */
+    protected function getFormType($type)
+    {
+        $type = $this->getConfig($type, Configuration::FORM_TYPE);
+
+        if (!$type) {
+            throw new NotFoundHttpException('Form not found');
+        }
+
+        return new $type();
+    }
+
+    /**
+     * @param string $type
+     * @param string $template
+     *
+     * @return string
+     */
+    protected function getTemplate($type, $template)
+    {
+        return $this->getConfig($type, Configuration::TEMPLATES . '.' . $template);
+    }
+
+    /**
      * @return string|null
      */
     protected function getWebSpaceKey()
@@ -290,6 +305,42 @@ abstract class AbstractController extends Controller
     }
 
     /**
+     * @return string
+     */
+    protected function getWebSpaceSystem()
+    {
+        $system = null;
+
+        if ($webSpace = $this->getRequestAnalyser()->getWebspace()) {
+            $security = $webSpace->getSecurity();
+
+            if ($security) {
+                $system = $security->getSystem();
+            }
+        }
+
+        return $system;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getWebSpaceLocales()
+    {
+        $webSpace = $this->getRequestAnalyser()->getWebspace();
+
+        $locales = [];
+        if ($webSpace) {
+            foreach ($webSpace->getLocalizations() as $localization) {
+                $locale = $localization->getLanguage();
+                $locales[$locale] = $locale;
+            }
+        }
+
+        return $locales;
+    }
+
+    /**
      * @return RequestAnalyzerInterface
      */
     protected function getRequestAnalyser()
@@ -299,6 +350,18 @@ abstract class AbstractController extends Controller
         }
 
         return $this->requestAnalyzer;
+    }
+
+    /**
+     * @return EntityManagerInterface
+     */
+    protected function getEntityManager()
+    {
+        if ($this->entityManager === null) {
+            $this->entityManager = $this->get('doctrine.orm.entity_manager');
+        }
+
+        return $this->entityManager;
     }
 
     /**
@@ -335,6 +398,26 @@ abstract class AbstractController extends Controller
         }
 
         return $this->mailHelper;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function render($view, array $parameters = array(), Response $response = null)
+    {
+        return parent::render(
+            $view,
+            $this->getTemplateAttributes($parameters),
+            $response
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function renderView($view, array $parameters = array())
+    {
+        return parent::renderView($view, $this->getTemplateAttributes($parameters));
     }
 
     /**
@@ -388,23 +471,5 @@ abstract class AbstractController extends Controller
             $default,
             $custom
         );
-    }
-
-    /**
-     * @return array
-     */
-    protected function getWebSpaceLocales()
-    {
-        $webSpace = $this->getRequestAnalyser()->getWebspace();
-
-        $locales = [];
-        if ($webSpace) {
-            foreach ($webSpace->getLocalizations() as $localization) {
-                $locale = $localization->getLanguage();
-                $locales[$locale] = $locale;
-            }
-        }
-
-        return $locales;
     }
 }

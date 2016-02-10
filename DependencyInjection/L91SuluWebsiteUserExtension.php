@@ -36,6 +36,12 @@ class L91SuluWebsiteUserExtension extends Extension
             }
             // Set WebSpace Role Name
             $this->setParameter($container, Configuration::ROLE, $webSpaceConfig[Configuration::ROLE]);
+            // Set WebSpace Form Types
+            foreach (Configuration::$FORM_TYPES as $formType) {
+                $formTypes = $webSpaceConfig[Configuration::FORM_TYPES];
+                $value = self::getValue($formType, $formTypes);
+                $this->setParameter($container, $formType, $value, Configuration::FORM_TYPES);
+            }
             // Set WebSpace Type Config
             foreach (Configuration::$TYPES as $type) {
                 $typeConfig = $webSpaceConfig[$type];
