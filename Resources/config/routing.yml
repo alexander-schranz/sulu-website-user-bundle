@@ -35,7 +35,7 @@ l91_sulu_website_user.registration:
 
 # Confirmation
 l91_sulu_website_user.confirmation:
-    path: /confirmation/{confirmationToken}
+    path: /confirmation
     defaults:
         _controller: L91SuluWebsiteUserBundle:Confirmation:confirmation
 

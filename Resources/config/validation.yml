@@ -6,18 +6,18 @@ Sulu\Bundle\SecurityBundle\Entity\BaseUser:
             fields: email
     properties:
         username:
-            - NotBlank: ~
+            - NotBlank: { groups: [registration, profile] }
         email:
-            - Email: ~
+            - Email: { groups: [registration, profile] }
 
 Sulu\Bundle\SecurityBundle\Entity\ContactInterface:
     properties:
         first_name:
-            - NotBlank: ~
+            - NotBlank: { groups: [registration, profile] }
         last_name:
-            - NotBlank: ~
+            - NotBlank: { groups: [registration, profile] }
 
 Sulu\Bundle\SecurityBundle\Entity\Address:
     properties:
         country:
-            - NotBlank: ~
+            - NotBlank: { groups: [registration, profile] }

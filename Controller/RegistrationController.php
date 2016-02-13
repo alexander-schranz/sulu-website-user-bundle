@@ -51,7 +51,7 @@ class RegistrationController extends AbstractController
         if ($system) {
             // find role
             $roleName = $this->getRoleName();
-            $role = $roleRepository->findBy([
+            $role = $roleRepository->findOneBy([
                 'system' => $system,
                 'name' => $roleName
             ]);

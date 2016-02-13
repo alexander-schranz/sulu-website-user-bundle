@@ -94,6 +94,7 @@ abstract class AbstractController extends Controller
             'contact_type' => $this->getConfig(Configuration::FORM_TYPES, Configuration::FORM_TYPE_CONTACT),
             'contact_address_type' => $this->getConfig(Configuration::FORM_TYPES, Configuration::FORM_TYPE_CONTACT_ADDRESS),
             'address_type' => $this->getConfig(Configuration::FORM_TYPES, Configuration::FORM_TYPE_ADDRESS),
+            'validation_groups' => [$type],
             'contact_type_options' => [
                 'label' => false,
                 'type' => $type,

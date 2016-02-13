@@ -32,7 +32,11 @@ class L91SuluWebsiteUserExtension extends Extension
             $this->webSpaceKey = $webSpaceKey;
             // Set WebSpace Default Mail Config
             foreach (Configuration::$MAIL_CONFIGS as $mailConfig) {
-                $this->setParameter($container, $mailConfig, $webSpaceConfig[$mailConfig]);
+                $value = $webSpaceConfig[$mailConfig];
+                if ($mailConfig === Configuration::MAIL_TO && empty($value)) {
+                    $value = $webSpaceConfig[Configuration::MAIL_FROM];
+                }
+                $this->setParameter($container, $mailConfig, $value);
             }
             // Set WebSpace Role Name
             $this->setParameter($container, Configuration::ROLE, $webSpaceConfig[Configuration::ROLE]);
@@ -48,6 +52,9 @@ class L91SuluWebsiteUserExtension extends Extension
                 // Set WebSpace Type Mail Config
                 foreach (Configuration::$MAIL_CONFIGS as $mailConfig) {
                     $value = self::getValue($mailConfig, $typeConfig, $webSpaceConfig);
+                    if ($mailConfig === Configuration::MAIL_TO && empty($value)) {
+                        $value = self::getValue(Configuration::MAIL_FROM, $typeConfig, $webSpaceConfig);
+                    }
                     $this->setParameter($container, $mailConfig, $value, $type);
                 }
                 // Set Activate Config

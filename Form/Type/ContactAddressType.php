@@ -19,6 +19,6 @@ class ContactAddressType extends AbstractContactAddressType
 
     public function getName()
     {
-        return Configuration::TYPE_REGISTRATION;
+        return Configuration::FORM_TYPE_CONTACT_ADDRESS;
     }
 }

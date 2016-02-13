@@ -28,6 +28,6 @@ class AddressType extends AbstractAddressType
 
     public function getName()
     {
-        return Configuration::TYPE_REGISTRATION;
+        return Configuration::FORM_TYPE_ADDRESS;
     }
 }
