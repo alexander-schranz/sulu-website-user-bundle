@@ -65,9 +65,7 @@ abstract class AbstractController extends Controller
                 $user = $this->activateUser($user, $type);
                 $this->sendMails($type, $user);
 
-                return new RedirectResponse(
-                    $request->getPathInfo() . '?send=true'
-                );
+                return $this->getValidRedirect($request);
             }
         }
 
@@ -233,6 +231,18 @@ abstract class AbstractController extends Controller
         }
 
         throw new NotFoundHttpException();
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    protected function getValidRedirect(Request $request)
+    {
+        return new RedirectResponse(
+            $request->getPathInfo() . '?send=true'
+        );
     }
 
     /**

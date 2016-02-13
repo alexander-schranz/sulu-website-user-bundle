@@ -69,7 +69,7 @@ class Handler implements HandlerInterface
                 Configuration::TYPE_PROFILE,
                 Configuration::TYPE_CONFIRMATION,
             ]
-        )) {
+        ) && !is_array($user)) {
             if ($user instanceof BaseUser) {
                 // set locale when not exist
                 if (!$user->getLocale()) {
