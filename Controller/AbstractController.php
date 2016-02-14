@@ -2,7 +2,6 @@
 
 namespace L91\Sulu\Bundle\WebsiteUserBundle\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
 use L91\Sulu\Bundle\WebsiteUserBundle\DependencyInjection\Configuration;
 use L91\Sulu\Bundle\WebsiteUserBundle\Form\HandlerInterface;
 use L91\Sulu\Bundle\WebsiteUserBundle\Mail\MailHelperInterface;
