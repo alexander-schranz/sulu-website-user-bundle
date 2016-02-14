@@ -19,7 +19,7 @@ contact data on the website. This bundle will give all basics you need:
 ### 0. Install over composer
 
 ```bash
-composer require l91/sulu-form-bundle:1.0.0-RC1
+composer require l91/sulu-form-bundle:~1.0
 composer install
 ```
 
