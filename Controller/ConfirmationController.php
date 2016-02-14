@@ -3,11 +3,8 @@
 namespace L91\Sulu\Bundle\WebsiteUserBundle\Controller;
 
 use L91\Sulu\Bundle\WebsiteUserBundle\DependencyInjection\Configuration;
-use Sulu\Bundle\SecurityBundle\Entity\BaseUser;
-use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ConfirmationController extends AbstractController
 {

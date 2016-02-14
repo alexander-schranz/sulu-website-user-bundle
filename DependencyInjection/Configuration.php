@@ -7,8 +7,6 @@ use L91\Sulu\Bundle\WebsiteUserBundle\Form\Type\ContactAddressType;
 use L91\Sulu\Bundle\WebsiteUserBundle\Form\Type\ContactType;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * This is the class that validates and merges configuration from your app/config files

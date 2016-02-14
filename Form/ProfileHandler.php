@@ -3,16 +3,9 @@
 namespace L91\Sulu\Bundle\WebsiteUserBundle\Form;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\NoResultException;
-use L91\Sulu\Bundle\WebsiteUserBundle\DependencyInjection\Configuration;
-use Sulu\Bundle\SecurityBundle\Entity\BaseUser;
-use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
-use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\SecurityBundle\Util\TokenGeneratorInterface;
 use Sulu\Component\Security\Authentication\SaltGenerator;
-use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
