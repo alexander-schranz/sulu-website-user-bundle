@@ -1,12 +1,17 @@
-# Sulu Website User Bundle (WIP)
+# Sulu Website User Bundle
 
-## Features
+## When use it?
 
- - Website User
- - Login
- - Registration
- - Profile
- - Double Opt-In
+You use Sulu to build an application, intranet, shop, ... where users can login, register and need to manage their 
+contact data on the website. This bundle will give all basics you need:
+
+ - Website Security User Role
+ - Login Form
+ - Registration Form
+ - Password Forget / Reset Form
+ - Profile Form
+ - Double Opt-In, Single Opt-In or Admin activation
+ - Multiple WebSpace Support
 
 ## Installation
 
@@ -58,19 +63,18 @@ security:
             id: sulu_security.user_repository
 
     access_control:
-        - { path: ^/[^/]+/profile, roles: ROLE_USER }
-        - { path: ^/[^/]+/(.*), roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: /%locale%/profile, roles: ROLE_USER }
 
     firewalls:
         website:
             pattern: ^/
             anonymous: ~
             form_login:
-                login_path: l91_sulu_website_user.login
-                check_path: l91_sulu_website_user.login_check
+                login_path: /%locale%/login
+                check_path: /%locale%/login-check
             logout:
-                path: l91_sulu_website_user.logout
-                target: l91_sulu_website_user.login
+                path: /%locale%/logout
+                target: /%locale%/login
 
 sulu_security:
     checker:
