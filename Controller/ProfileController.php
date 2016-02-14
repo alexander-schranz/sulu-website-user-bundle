@@ -4,6 +4,7 @@ namespace L91\Sulu\Bundle\WebsiteUserBundle\Controller;
 
 use L91\Sulu\Bundle\WebsiteUserBundle\DependencyInjection\Configuration;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class ProfileController extends AbstractController
 {
@@ -16,9 +17,24 @@ class ProfileController extends AbstractController
     {
         $this->checkSecuritySystem(Configuration::TYPE_PROFILE);
 
+        $user = $this->getUser();
+
+        if (!$user) {
+            throw new AccessDeniedHttpException();
+        }
+
         return $this->handleForm(
             $request,
-            Configuration::TYPE_PROFILE
+            Configuration::TYPE_PROFILE,
+            $user
         );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function doSuccessRedirect()
+    {
+        return false;
     }
 }

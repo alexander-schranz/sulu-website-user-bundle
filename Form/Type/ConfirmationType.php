@@ -45,6 +45,7 @@ class ConfirmationType extends AbstractUserType
     {
         parent::configureOptions($resolver);
         $resolver->setDefault('data_class', null);
+        $resolver->setDefault('validation_group', Configuration::TYPE_CONFIRMATION);
         $resolver->setDefault('csrf_protection', false);
     }
 }

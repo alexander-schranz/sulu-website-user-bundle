@@ -20,6 +20,11 @@ services:
         class: L91\Sulu\Bundle\WebsiteUserBundle\Form\RegistrationHandler
         arguments: [@sulu_security.salt_generator, @security.encoder_factory, @doctrine.orm.entity_manager, @sulu.repository.user, @sulu_security.token_generator]
 
+    # Profile Handler
+    l91_sulu_website_user.profile.handler:
+        class: L91\Sulu\Bundle\WebsiteUserBundle\Form\ProfileHandler
+        arguments: [@sulu_security.salt_generator, @security.encoder_factory, @doctrine.orm.entity_manager, @sulu.repository.user, @sulu_security.token_generator]
+
     # Confirmation Handler
     l91_sulu_website_user.confirmation.handler:
         class: L91\Sulu\Bundle\WebsiteUserBundle\Form\ConfirmationHandler

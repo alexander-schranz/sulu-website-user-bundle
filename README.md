@@ -11,6 +11,7 @@ contact data on the website. This bundle will give all basics you need:
  - Password Forget / Reset Form
  - Profile Form
  - Double Opt-In, Single Opt-In or Admin activation
+ - Notification Emails for every action (User + Admin)
  - Multiple WebSpace Support
 
 ## Installation

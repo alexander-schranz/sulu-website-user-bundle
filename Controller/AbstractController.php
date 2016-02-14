@@ -58,6 +58,8 @@ abstract class AbstractController extends Controller
         $form = $this->createForm($this->getFormType($type), $data, $options);
         $form->handleRequest($request);
 
+        $valid = false;
+
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $this->getHandler($type)->handle(
                 $form,
@@ -66,9 +68,12 @@ abstract class AbstractController extends Controller
             );
 
             if ($user) {
+                $valid = true;
                 $this->sendMails($type, $user);
 
-                return $this->getValidRedirect($request);
+                if ($this->doSuccessRedirect()) {
+                    return $this->getValidRedirect($request);
+                }
             }
         }
 
@@ -76,6 +81,7 @@ abstract class AbstractController extends Controller
             $this->getTemplate($type, Configuration::TEMPLATE_FORM),
             [
                 'form' => $form->createView(),
+                'valid' => $valid,
             ]
         );
     }
@@ -126,7 +132,6 @@ abstract class AbstractController extends Controller
             'contact_type' => $this->getConfig(Configuration::FORM_TYPES, Configuration::FORM_TYPE_CONTACT),
             'contact_address_type' => $this->getConfig(Configuration::FORM_TYPES, Configuration::FORM_TYPE_CONTACT_ADDRESS),
             'address_type' => $this->getConfig(Configuration::FORM_TYPES, Configuration::FORM_TYPE_ADDRESS),
-            'validation_groups' => [$type],
             'contact_type_options' => [
                 'label' => false,
                 'type' => $type,
@@ -450,5 +455,13 @@ abstract class AbstractController extends Controller
             $default,
             $custom
         );
+    }
+
+    /**
+     * @return bool
+     */
+    protected function doSuccessRedirect()
+    {
+        return true;
     }
 }

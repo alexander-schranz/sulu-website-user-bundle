@@ -4,6 +4,7 @@ namespace L91\Sulu\Bundle\WebsiteUserBundle\Form\Type;
 
 use L91\Sulu\Bundle\WebsiteUserBundle\DependencyInjection\Configuration;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class RegistrationType extends AbstractUserType
 {
@@ -36,5 +37,14 @@ class RegistrationType extends AbstractUserType
     public function getName()
     {
         return Configuration::TYPE_REGISTRATION;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+        $resolver->setDefault('validation_group', Configuration::TYPE_REGISTRATION);
     }
 }

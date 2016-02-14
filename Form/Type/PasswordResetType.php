@@ -46,6 +46,7 @@ class PasswordResetType extends AbstractUserType
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
+        $resolver->setDefault('validation_group', Configuration::TYPE_PASSWORD_RESET);
         $resolver->setDefault('data_class', null);
     }
 }
