@@ -91,7 +91,8 @@ sulu_security:
 
 ### 5. Create your Templates
 
-Create the following templates in your theme under `<your_theme>/templates/security`
+Create the following templates in your theme under `<your_theme>/templates/security`.
+(see https://github.com/alexander-schranz/sulu-website-user-bundle/tree/master/Resources/themes/default/templates/security as examples)
 
  - `login.html.twig`
  - `registration.html.twig`
