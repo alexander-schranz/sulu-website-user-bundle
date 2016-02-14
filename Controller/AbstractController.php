@@ -40,11 +40,6 @@ abstract class AbstractController extends Controller
     protected $mailHelper;
 
     /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
-
-    /**
      * @var UserRepository
      */
     protected $userRepository;
@@ -357,18 +352,6 @@ abstract class AbstractController extends Controller
         }
 
         return $this->requestAnalyzer;
-    }
-
-    /**
-     * @return EntityManagerInterface
-     */
-    protected function getEntityManager()
-    {
-        if ($this->entityManager === null) {
-            $this->entityManager = $this->get('doctrine.orm.entity_manager');
-        }
-
-        return $this->entityManager;
     }
 
     /**
