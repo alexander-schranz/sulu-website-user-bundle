@@ -10,6 +10,7 @@ class AddressType extends AbstractAddressType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $builder->add('primaryAddress', 'hidden', ['data' => 1]);
         $builder->add('street', 'text', ['required' => false]);
         $builder->add('number', 'text', ['required' => false]);
         $builder->add('addition', 'text', ['required' => false]);

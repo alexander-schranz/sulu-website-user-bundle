@@ -9,12 +9,10 @@ interface HandlerInterface
 {
     /**
      * @param Form $form
-     * @param string $type
      * @param string $webSpaceKey
+     * @param array $options
      *
      * @return mixed|User
-     *
-     * @throws \Exception
      */
-    public function handle(Form $form, $type, $webSpaceKey);
+    public function handle(Form $form, $webSpaceKey, array $options = []);
 }

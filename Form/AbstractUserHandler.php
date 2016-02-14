@@ -3,7 +3,6 @@
 namespace L91\Sulu\Bundle\WebsiteUserBundle\Form;
 
 use Doctrine\ORM\EntityManagerInterface;
-use L91\Sulu\Bundle\WebsiteUserBundle\DependencyInjection\Configuration;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
 use Sulu\Bundle\ContactBundle\Entity\Email;
@@ -15,10 +14,7 @@ use Sulu\Component\Security\Authentication\SaltGenerator;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
-/**
- * Handle the save of a user form.
- */
-class Handler implements HandlerInterface
+abstract class AbstractUserHandler implements HandlerInterface
 {
     /**
      * @var SaltGenerator
@@ -36,61 +32,26 @@ class Handler implements HandlerInterface
     protected $securityEncoderFactory;
 
     /**
-     * @var array
+     * @param Form $form
+     * @param $user
+     *
+     * @return $user
      */
-    protected $handler = [];
-
-    /**
-     * @param SaltGenerator $saltGenerator
-     * @param EncoderFactoryInterface $securityEncoderFactory
-     * @param EntityManagerInterface $entityManager
-     */
-    public function __construct(
-        SaltGenerator $saltGenerator,
-        EncoderFactoryInterface $securityEncoderFactory,
-        EntityManagerInterface $entityManager
-    ) {
-        $this->saltGenerator = $saltGenerator;
-        $this->securityEncoderFactory = $securityEncoderFactory;
-        $this->entityManager = $entityManager;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function handle(Form $form, $type, $webSpaceKey)
+    protected function setUserData(Form $form, $user)
     {
-        $user = $form->getData();
-
-        if (in_array(
-            $type, [
-                Configuration::TYPE_REGISTRATION,
-                Configuration::TYPE_PASSWORD_RESET,
-                Configuration::TYPE_PROFILE,
-                Configuration::TYPE_CONFIRMATION,
-            ]
-        ) && !is_array($user)) {
-            if ($user instanceof BaseUser) {
-                // set locale when not exist
-                if (!$user->getLocale()) {
-                    $user->setLocale('en');
-                }
-
-                // set password when new or changed
-                $this->setPasswordAndSalt($form, $user, $type);
+        if ($user instanceof BaseUser) {
+            // set locale when not exist
+            if (!$user->getLocale()) {
+                $user->setLocale('en');
             }
 
-            if ($user instanceof User) {
-                // save contact and address when exists
-                $this->persistContact($user);
-            }
+            // set password when new or changed
+            $this->setPasswordAndSalt($form, $user);
+        }
 
-            if ($type === Configuration::TYPE_REGISTRATION) {
-                $user->setConfirmationKey($this->getRandomSalt());
-            }
-
-            $this->entityManager->persist($user);
-            $this->entityManager->flush();
+        if ($user instanceof User) {
+            // save contact and address when exists
+            $this->persistContact($user);
         }
 
         return $user;
@@ -163,26 +124,16 @@ class Handler implements HandlerInterface
     /**
      * @param Form $form
      * @param BaseUser $user
-     * @param $type
      */
-    protected function setPasswordAndSalt(Form $form, BaseUser &$user, $type)
+    protected function setPasswordAndSalt(Form $form, BaseUser &$user)
     {
-        // set password
-        if (in_array(
-            $type, [
-                Configuration::TYPE_REGISTRATION,
-                Configuration::TYPE_PASSWORD_RESET,
-                Configuration::TYPE_PROFILE
-            ]
-        )) {
-            if ($form->has('plainPassword') && $newPassword = $form->get('plainPassword')->getData()) {
-                // generate salt if not exist
-                if (!$user->getSalt()) {
-                    $user->setSalt($this->getRandomSalt());
-                }
-
-                $user->setPassword($this->getEncodedPassword($user, $newPassword));
+        if ($form->has('plainPassword') && $newPassword = $form->get('plainPassword')->getData()) {
+            // generate salt if not exist
+            if (!$user->getSalt()) {
+                $user->setSalt($this->getRandomSalt());
             }
+
+            $user->setPassword($this->getEncodedPassword($user, $newPassword));
         }
     }
 

@@ -40,20 +40,6 @@ class ConfirmationController extends AbstractController
     }
 
     /**
-     * {@inheritdoc}
-     */
-    protected function postFormHandle(UserInterface $user)
-    {
-        if ($user instanceof BaseUser) {
-            $user->setConfirmationKey(null);
-            $this->getEntityManager()->persist($user);
-            $this->getEntityManager()->flush();
-        }
-
-        return $user;
-    }
-
-    /**
      * @return UserRepositoryInterface
      */
     protected function getUserRepository()

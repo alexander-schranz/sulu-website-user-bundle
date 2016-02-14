@@ -11,7 +11,6 @@ use Sulu\Bundle\WebsiteBundle\Resolver\RequestAnalyzerResolverInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -60,9 +59,13 @@ abstract class AbstractController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($entity = $this->handleFormSubmit($form, $type)) {
-                $user = $this->postFormHandle($entity);
-                $user = $this->activateUser($user, $type);
+            $user = $this->getHandler($type)->handle(
+                $form,
+                $this->getWebSpaceKey(),
+                $this->getHandlerOptions($request, $type)
+            );
+
+            if ($user) {
                 $this->sendMails($type, $user);
 
                 return $this->getValidRedirect($request);
@@ -75,6 +78,34 @@ abstract class AbstractController extends Controller
                 'form' => $form->createView(),
             ]
         );
+    }
+
+    /**
+     * @param $type
+     *
+     * @return HandlerInterface
+     */
+    protected function getHandler($type)
+    {
+        return $this->get(sprintf('%s.%s.handler', Configuration::ROOT, $type));
+    }
+
+    /**
+     * @param Request $request
+     * @param $type
+     *
+     * @return array
+     */
+    protected function getHandlerOptions(Request $request, $type)
+    {
+        return [
+            'type' => $type,
+            'system' => $this->getWebSpaceSystem(),
+            'locales' => $this->getWebSpaceLocales(),
+            'locale' => $request->getLocale(),
+            Configuration::ROLE => $this->getConfig(null, Configuration::ROLE),
+            Configuration::ACTIVATE_USER => $this->getConfig($type, Configuration::ACTIVATE_USER),
+        ];
     }
 
     /**
@@ -111,52 +142,6 @@ abstract class AbstractController extends Controller
         ];
 
         return array_merge($defaultOptions, $options);
-    }
-
-    /**
-     * @param UserInterface $user
-     *
-     * @return UserInterface
-     */
-    protected function postFormHandle(UserInterface $user)
-    {
-        return $user;
-    }
-
-    /**
-     * @param Form $form
-     * @param string $type
-     *
-     * @return UserInterface
-     *
-     * @throws \Exception
-     */
-    protected function handleFormSubmit(Form $form, $type)
-    {
-        $entity = $this->getFormHandler()->handle($form, $type, $this->getWebSpaceKey());
-
-        return $entity;
-    }
-
-    /**
-     * TODO directly in form
-     *
-     * @param UserInterface $user
-     * @param $type
-     *
-     * @return UserInterface
-     */
-    protected function activateUser(UserInterface $user, $type)
-    {
-        if ($this->getConfig($type, Configuration::ACTIVATE_USER)) {
-            if ($user instanceof BaseUser) {
-                $user->setEnabled(true);
-                $this->entityManager->persist($user);
-                $this->entityManager->flush();
-            }
-        }
-
-        return $user;
     }
 
     /**
@@ -243,14 +228,6 @@ abstract class AbstractController extends Controller
         return new RedirectResponse(
             $request->getPathInfo() . '?send=true'
         );
-    }
-
-    /**
-     * @return string
-     */
-    protected function getRoleName()
-    {
-        return $this->getConfig(null, Configuration::ROLE);
     }
 
     /**
@@ -385,18 +362,6 @@ abstract class AbstractController extends Controller
         }
 
         return $this->requestAnalyzerResolver;
-    }
-
-    /**
-     * @return HandlerInterface
-     */
-    protected function getFormHandler()
-    {
-        if ($this->formHandler === null) {
-            $this->formHandler = $this->get('l91_sulu_website_user.form.handler');
-        }
-
-        return $this->formHandler;
     }
 
     /**

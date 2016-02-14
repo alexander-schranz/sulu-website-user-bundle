@@ -36,48 +36,4 @@ class RegistrationController extends AbstractController
             $user
         );
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function postFormHandle(UserInterface $user)
-    {
-        $entityManager = $this->getEntityManager();
-        $roleRepository = $entityManager->getRepository(Role::class);
-
-        $system = $this->getWebSpaceSystem();
-
-        // only create role when system found
-        if ($system) {
-            // find role
-            $roleName = $this->getRoleName();
-            $role = $roleRepository->findOneBy([
-                'system' => $system,
-                'name' => $roleName
-            ]);
-
-            // create role when not exists
-            if (!$role) {
-                /** @var Role $role */
-                $role = $roleRepository->createNew();
-                $role->setSystem($system);
-                $role->setName($roleName);
-
-                $entityManager->persist($role);
-            }
-
-            // create new user roles
-            $userRole = new UserRole();
-            $userRole->setRole($role);
-            $userRole->setUser($user);
-            $locales = json_encode(array_values($this->getWebSpaceLocales()));
-            $userRole->setLocale($locales);
-            $entityManager->persist($userRole);
-
-            // save user, role and user role
-            $entityManager->flush();
-        }
-
-        return $user;
-    }
 }
