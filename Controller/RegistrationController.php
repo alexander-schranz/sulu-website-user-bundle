@@ -8,6 +8,7 @@ use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
 use Sulu\Bundle\SecurityBundle\Entity\BaseUser;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,7 +24,7 @@ class RegistrationController extends AbstractController
     {
         $this->checkSecuritySystem();
 
-        $user = new User();
+        $user = $this->getNewUser();
         $contact = new Contact();
         $contactAddress = new ContactAddress();
         $contactAddress->setContact($contact);
@@ -35,5 +36,13 @@ class RegistrationController extends AbstractController
             Configuration::TYPE_REGISTRATION,
             $user
         );
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function getNewUser()
+    {
+        return $this->getUserRepository()->createNew();
     }
 }

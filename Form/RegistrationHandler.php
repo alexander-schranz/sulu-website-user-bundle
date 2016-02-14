@@ -125,9 +125,9 @@ class RegistrationHandler extends AbstractUserHandler
     {
         $token = $this->tokenGenerator->generateToken();
 
-        try {
-            $this->userRepository->findOneBy(['confirmationKey' => $token]);
-        } catch (NoResultException $ex) {
+        $user = $this->userRepository->findOneBy(['confirmationKey' => $token]);
+
+        if (!$user) {
             return $token;
         }
 

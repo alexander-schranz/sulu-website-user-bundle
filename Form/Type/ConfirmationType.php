@@ -24,7 +24,7 @@ class ConfirmationType extends AbstractUserType
                 new Exist([
                     'groups' => $options['type'],
                     'columns' => ['confirmationKey'],
-                    'entity' => User::class,
+                    'entity' => $options['user_class'],
                 ]),
                 new NotBlank(),
             ],
@@ -44,7 +44,6 @@ class ConfirmationType extends AbstractUserType
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-        $resolver->setDefault('data_class', null);
         $resolver->setDefault('validation_group', Configuration::TYPE_CONFIRMATION);
         $resolver->setDefault('csrf_protection', false);
     }

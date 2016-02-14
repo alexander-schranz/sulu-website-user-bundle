@@ -18,7 +18,7 @@ abstract class AbstractUserType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => User::class,
+            'user_class' => User::class,
             'contact_type' => ContactType::class,
             'contact_type_options' => [],
             'contact_address_type' => ContactAddressType::class,

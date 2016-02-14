@@ -7,6 +7,7 @@ use L91\Sulu\Bundle\WebsiteUserBundle\DependencyInjection\Configuration;
 use L91\Sulu\Bundle\WebsiteUserBundle\Form\HandlerInterface;
 use L91\Sulu\Bundle\WebsiteUserBundle\Mail\MailHelperInterface;
 use Sulu\Bundle\SecurityBundle\Entity\BaseUser;
+use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
 use Sulu\Bundle\WebsiteBundle\Resolver\RequestAnalyzerResolverInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -42,6 +43,11 @@ abstract class AbstractController extends Controller
      * @var EntityManagerInterface
      */
     protected $entityManager;
+
+    /**
+     * @var UserRepository
+     */
+    protected $userRepository;
 
     /**
      * @param Request $request
@@ -132,6 +138,7 @@ abstract class AbstractController extends Controller
             'contact_type' => $this->getConfig(Configuration::FORM_TYPES, Configuration::FORM_TYPE_CONTACT),
             'contact_address_type' => $this->getConfig(Configuration::FORM_TYPES, Configuration::FORM_TYPE_CONTACT_ADDRESS),
             'address_type' => $this->getConfig(Configuration::FORM_TYPES, Configuration::FORM_TYPE_ADDRESS),
+            'user_class' => $this->getUserClass(),
             'contact_type_options' => [
                 'label' => false,
                 'type' => $type,
@@ -148,6 +155,10 @@ abstract class AbstractController extends Controller
                 'locale' => $request->getLocale(),
             ],
         ];
+
+        if (in_array($type, [Configuration::TYPE_REGISTRATION, Configuration::TYPE_PROFILE])) {
+            $defaultOptions['data_class'] = $this->getUserClass();
+        }
 
         return array_merge($defaultOptions, $options);
     }
@@ -361,6 +372,18 @@ abstract class AbstractController extends Controller
     }
 
     /**
+     * @return UserRepository
+     */
+    protected function getUserRepository()
+    {
+        if ($this->userRepository === null) {
+            $this->userRepository = $this->get('sulu.repository.user');
+        }
+
+        return $this->userRepository;
+    }
+
+    /**
      * @return RequestAnalyzerResolverInterface
      */
     protected function getRequestAnalyserResolver()
@@ -463,5 +486,13 @@ abstract class AbstractController extends Controller
     protected function doSuccessRedirect()
     {
         return true;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getUserClass()
+    {
+        return $this->getUserRepository()->getClassName();
     }
 }
