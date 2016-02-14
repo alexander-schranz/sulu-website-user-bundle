@@ -4,6 +4,7 @@ namespace L91\Sulu\Bundle\WebsiteUserBundle\Form;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NoResultException;
+use L91\Sulu\Bundle\WebsiteUserBundle\DependencyInjection\Configuration;
 use Sulu\Bundle\SecurityBundle\Entity\BaseUser;
 use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
 use Sulu\Component\Security\Authentication\SaltGenerator;
@@ -53,6 +54,10 @@ class PasswordResetHandler extends AbstractUserHandler
             $this->setPasswordAndSalt($form, $user);
             $user->setPasswordResetTokenExpiresAt(null);
             $user->setPasswordResetToken(null);
+
+            if ($options[Configuration::ACTIVATE_USER]) {
+                $user->setEnabled(true);
+            }
 
             $this->entityManager->persist($user);
             $this->entityManager->flush();

@@ -34,4 +34,3 @@ services:
     l91_sulu_website_user.password_reset.handler:
         class: L91\Sulu\Bundle\WebsiteUserBundle\Form\PasswordResetHandler
         arguments: [@doctrine.orm.entity_manager, @sulu.repository.user, @security.encoder_factory, @sulu_security.salt_generator]
-

@@ -104,7 +104,10 @@ abstract class AbstractController extends Controller
             'locales' => $this->getWebSpaceLocales(),
             'locale' => $request->getLocale(),
             Configuration::ROLE => $this->getConfig(null, Configuration::ROLE),
-            Configuration::ACTIVATE_USER => $this->getConfig($type, Configuration::ACTIVATE_USER),
+            Configuration::ACTIVATE_USER => $this->getConfig(
+                $type === Configuration::TYPE_PASSWORD_RESET ? Configuration::TYPE_CONFIRMATION : $type,
+                Configuration::ACTIVATE_USER
+            ),
         ];
     }
 
