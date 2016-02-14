@@ -8,13 +8,30 @@ services:
         class: L91\Sulu\Bundle\WebsiteUserBundle\Mail\MailHelper
         arguments: [@mailer]
 
+    # Exist Validator
+    l91_sulu_website_user.validator.exist:
+        class: L91\Sulu\Bundle\WebsiteUserBundle\Validator\Constraints\ExistValidator
+        arguments: [@doctrine.orm.entity_manager]
+        tags:
+            - { name: validator.constraint_validator, alias: exist_validator }
+
     # Registration Handler
     l91_sulu_website_user.registration.handler:
         class: L91\Sulu\Bundle\WebsiteUserBundle\Form\RegistrationHandler
-        arguments: [@sulu_security.salt_generator, @security.encoder_factory, @doctrine.orm.entity_manager]
+        arguments: [@sulu_security.salt_generator, @security.encoder_factory, @doctrine.orm.entity_manager, @sulu.repository.user, @sulu_security.token_generator]
 
     # Confirmation Handler
     l91_sulu_website_user.confirmation.handler:
         class: L91\Sulu\Bundle\WebsiteUserBundle\Form\ConfirmationHandler
-        arguments: [@doctrine.orm.entity_manager]
+        arguments: [@doctrine.orm.entity_manager, @sulu.repository.user]
+
+    # Password Forget Handler
+    l91_sulu_website_user.password_forget.handler:
+        class: L91\Sulu\Bundle\WebsiteUserBundle\Form\PasswordForgetHandler
+        arguments: [@doctrine.orm.entity_manager, @sulu.repository.user, @sulu_security.token_generator]
+
+    # Password Reset Handler
+    l91_sulu_website_user.password_reset.handler:
+        class: L91\Sulu\Bundle\WebsiteUserBundle\Form\PasswordResetHandler
+        arguments: [@doctrine.orm.entity_manager, @sulu.repository.user, @security.encoder_factory, @sulu_security.salt_generator]
 

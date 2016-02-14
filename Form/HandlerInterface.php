@@ -2,7 +2,7 @@
 
 namespace L91\Sulu\Bundle\WebsiteUserBundle\Form;
 
-use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Form\Form;
 
 interface HandlerInterface
@@ -12,7 +12,7 @@ interface HandlerInterface
      * @param string $webSpaceKey
      * @param array $options
      *
-     * @return mixed|User
+     * @return UserInterface
      */
     public function handle(Form $form, $webSpaceKey, array $options = []);
 }

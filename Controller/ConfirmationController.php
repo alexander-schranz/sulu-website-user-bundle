@@ -19,23 +19,9 @@ class ConfirmationController extends AbstractController
     {
         $this->checkSecuritySystem(Configuration::TYPE_CONFIRMATION);
 
-        $data = null;
-
-        /** @var BaseUser $user */
-        $user = $this->getUserRepository()->findOneBy(['username' => $request->get('username')]);
-
-        if (!$user && $request->get('send') !== 'true') {
-            throw new NotFoundHttpException();
-        }
-
-        if ($request->get('send') !== 'true' && !$user->getConfirmationKey()) {
-            return $this->getValidRedirect($request);
-        }
-
         return $this->handleForm(
             $request,
-            Configuration::TYPE_CONFIRMATION,
-            $user
+            Configuration::TYPE_CONFIRMATION
         );
     }
 

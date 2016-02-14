@@ -22,8 +22,8 @@ l91_sulu_website_user.password_forget:
         _controller: L91SuluWebsiteUserBundle:PasswordForget:forget
 
 # Password Reset
-l91_sulu_website_user.password-reset:
-    path: /password-reset/{userId}/{passwordResetToken}
+l91_sulu_website_user.password_reset:
+    path: /password-reset
     defaults:
         _controller: L91SuluWebsiteUserBundle:PasswordReset:reset
 

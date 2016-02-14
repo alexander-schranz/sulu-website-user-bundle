@@ -13,7 +13,8 @@ class PasswordResetController extends AbstractController
 
         return $this->handleForm(
             $request,
-            Configuration::TYPE_PASSWORD_RESET
+            Configuration::TYPE_PASSWORD_RESET,
+            ['token' => $request->get('token')]
         );
     }
 }

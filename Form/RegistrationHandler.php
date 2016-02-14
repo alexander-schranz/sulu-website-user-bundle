@@ -4,10 +4,13 @@ namespace L91\Sulu\Bundle\WebsiteUserBundle\Form;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NoResultException;
 use L91\Sulu\Bundle\WebsiteUserBundle\DependencyInjection\Configuration;
 use Sulu\Bundle\SecurityBundle\Entity\BaseUser;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
+use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
+use Sulu\Bundle\SecurityBundle\Util\TokenGeneratorInterface;
 use Sulu\Component\Security\Authentication\SaltGenerator;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Form\Form;
@@ -21,18 +24,34 @@ class RegistrationHandler extends AbstractUserHandler
     protected $roleRepository;
 
     /**
+     * @var TokenGeneratorInterface
+     */
+    protected $tokenGenerator;
+
+    /**
+     * @var UserRepository
+     */
+    protected $userRepository;
+
+    /**
      * @param SaltGenerator $saltGenerator
      * @param EncoderFactoryInterface $securityEncoderFactory
      * @param EntityManagerInterface $entityManager
+     * @param UserRepository $userRepository
+     * @param TokenGeneratorInterface $tokenGenerator
      */
     public function __construct(
         SaltGenerator $saltGenerator,
         EncoderFactoryInterface $securityEncoderFactory,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        UserRepository $userRepository,
+        TokenGeneratorInterface $tokenGenerator
     ) {
         $this->saltGenerator = $saltGenerator;
         $this->securityEncoderFactory = $securityEncoderFactory;
         $this->entityManager = $entityManager;
+        $this->tokenGenerator = $tokenGenerator;
+        $this->userRepository = $userRepository;
         $this->roleRepository = $this->entityManager->getRepository(Role::class);
     }
 
@@ -46,7 +65,7 @@ class RegistrationHandler extends AbstractUserHandler
         $user = $this->setUserData($form, $user);
 
         if ($user instanceof BaseUser) {
-            $user->setConfirmationKey($this->getRandomSalt());
+            $user->setConfirmationKey($this->getUniqueToken());
 
             if ($options[Configuration::ACTIVATE_USER]) {
                 $user->setEnabled(true);
@@ -97,5 +116,21 @@ class RegistrationHandler extends AbstractUserHandler
         $locales = json_encode(array_values($locales));
         $userRole->setLocale($locales);
         $this->entityManager->persist($userRole);
+    }
+
+    /**
+     * @return string a unique token
+     */
+    protected function getUniqueToken()
+    {
+        $token = $this->tokenGenerator->generateToken();
+
+        try {
+            $this->userRepository->findOneBy(['confirmationKey' => $token]);
+        } catch (NoResultException $ex) {
+            return $token;
+        }
+
+        return $this->getUniqueToken();
     }
 }

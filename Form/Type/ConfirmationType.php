@@ -3,7 +3,9 @@
 namespace L91\Sulu\Bundle\WebsiteUserBundle\Form\Type;
 
 use L91\Sulu\Bundle\WebsiteUserBundle\DependencyInjection\Configuration;
+use L91\Sulu\Bundle\WebsiteUserBundle\Validator\Constraints\Exist;
 use Sulu\Bundle\SecurityBundle\Entity\BaseUser;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -15,27 +17,16 @@ class ConfirmationType extends AbstractUserType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $token = 'token';
-
-        if (isset($options['data'])) {
-            /** @var BaseUser $user */
-            $user = $options['data'];
-            $token = $user->getConfirmationKey();
-        }
-
         $builder->setMethod('get');
-        $builder->add('username', 'text');
-        $builder->add('confirmation_key', 'text', [
+        $builder->add('token', 'text', [
             'error_bubbling' => false,
             'constraints' => [
-                new EqualTo([
+                new Exist([
                     'groups' => $options['type'],
-                    'value' => $token,
-                    'message' => null, // Hide token output
+                    'columns' => ['confirmationKey'],
+                    'entity' => User::class,
                 ]),
-                new NotBlank([
-                    'groups' => $options['type'],
-                ]),
+                new NotBlank(),
             ],
         ]);
 
@@ -53,6 +44,7 @@ class ConfirmationType extends AbstractUserType
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
+        $resolver->setDefault('data_class', null);
         $resolver->setDefault('csrf_protection', false);
     }
 }
