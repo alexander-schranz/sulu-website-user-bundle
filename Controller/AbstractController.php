@@ -2,7 +2,6 @@
 
 namespace L91\Sulu\Bundle\WebsiteUserBundle\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
 use L91\Sulu\Bundle\WebsiteUserBundle\DependencyInjection\Configuration;
 use L91\Sulu\Bundle\WebsiteUserBundle\Form\HandlerInterface;
 use L91\Sulu\Bundle\WebsiteUserBundle\Mail\MailHelperInterface;
@@ -38,11 +37,6 @@ abstract class AbstractController extends Controller
      * @var MailHelperInterface
      */
     protected $mailHelper;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
 
     /**
      * @var UserRepository
@@ -357,18 +351,6 @@ abstract class AbstractController extends Controller
         }
 
         return $this->requestAnalyzer;
-    }
-
-    /**
-     * @return EntityManagerInterface
-     */
-    protected function getEntityManager()
-    {
-        if ($this->entityManager === null) {
-            $this->entityManager = $this->get('doctrine.orm.entity_manager');
-        }
-
-        return $this->entityManager;
     }
 
     /**

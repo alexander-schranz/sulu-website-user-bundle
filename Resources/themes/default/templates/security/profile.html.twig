@@ -1,0 +1,7 @@
+{% extends "BlackriverWebsiteBundle:views:master.html.twig" %}
+{% block content %}
+    {% if valid %}
+        Profile Saved!
+    {% endif %}
+    {{ form(form) }}
+{% endblock %}

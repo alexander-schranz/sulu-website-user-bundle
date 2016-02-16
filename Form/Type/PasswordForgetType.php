@@ -4,7 +4,6 @@ namespace L91\Sulu\Bundle\WebsiteUserBundle\Form\Type;
 
 use L91\Sulu\Bundle\WebsiteUserBundle\DependencyInjection\Configuration;
 use L91\Sulu\Bundle\WebsiteUserBundle\Validator\Constraints\Exist;
-use Sulu\Bundle\SecurityBundle\Entity\User;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
