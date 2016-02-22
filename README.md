@@ -23,14 +23,18 @@ composer require l91/sulu-website-user-bundle:~1.0
 composer install
 ```
 
-### 1. Add Bundle to WebsiteKernel (app/WebsiteKernel.php):
+### 1. Add Bundle to WebsiteKernel
+
+`app/WebsiteKernel.php:`
 
 ```php
 $bundles[] = new Symfony\Bundle\SecurityBundle\SecurityBundle();
 $bundles[] = new L91\Sulu\Bundle\WebsiteUserBundle\L91SuluWebsiteUserBundle();
  ```
 
-### 2. Add new routes to website routing config (app/config/website/routing.yml)
+### 2. Add new routes to website routing config
+
+`app/config/website/routing.yml:`
 
 ```yml
 l91_sulu_website_user:
@@ -38,7 +42,9 @@ l91_sulu_website_user:
     resource: "@L91SuluWebsiteUserBundle/Resources/config/routing.yml"
 ```
 
-### 3. Add Security system to your webspace (app/Resources/webspaces/<your_webspace>.xml)
+### 3. Add Security system to your webspace
+
+`app/Resources/webspaces/<your_webspace>.xml:`
 
 ```xml
     <security>
@@ -46,7 +52,9 @@ l91_sulu_website_user:
     </security>
 ```
 
-### 4. Update your website security file (app/config/website/security.yml)
+### 4. Update your website security file
+
+`app/config/website/security.yml`
 
 Example:
 
