@@ -38,7 +38,7 @@ l91_sulu_website_user:
     resource: "@L91SuluWebsiteUserBundle/Resources/config/routing.yml"
 ```
 
-### 3. Add Security system to your webspace
+### 3. Add Security system to your webspace (app/Resources/webspaces/<your_webspace>.xml)
 
 ```xml
     <security>
