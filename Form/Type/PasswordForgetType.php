@@ -20,7 +20,7 @@ class PasswordForgetType extends AbstractUserType
             'constraints' => new Exist([
                 'columns' => ['email', 'username'],
                 'entity' => $options['user_class'],
-                'groups' => [$options['type']],
+                'groups' => Configuration::TYPE_PASSWORD_FORGET,
             ]),
         ]);
 
@@ -38,6 +38,6 @@ class PasswordForgetType extends AbstractUserType
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-        $resolver->setDefault('validation_group', Configuration::TYPE_PASSWORD_FORGET);
+        $resolver->setDefault('validation_groups', Configuration::TYPE_PASSWORD_FORGET);
     }
 }

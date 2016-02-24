@@ -19,31 +19,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 abstract class AbstractController extends Controller
 {
     /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
-
-    /**
-     * @var RequestAnalyzerResolverInterface
-     */
-    private $requestAnalyzerResolver;
-
-    /**
-     * @var HandlerInterface
-     */
-    protected $formHandler;
-
-    /**
-     * @var MailHelperInterface
-     */
-    protected $mailHelper;
-
-    /**
-     * @var UserRepository
-     */
-    protected $userRepository;
-
-    /**
      * @param Request $request
      * @param string $type
      * @param mixed $data
@@ -346,11 +321,7 @@ abstract class AbstractController extends Controller
      */
     protected function getRequestAnalyser()
     {
-        if ($this->requestAnalyzer === null) {
-            $this->requestAnalyzer = $this->get('sulu_core.webspace.request_analyzer');
-        }
-
-        return $this->requestAnalyzer;
+        return $this->get('sulu_core.webspace.request_analyzer');
     }
 
     /**
@@ -358,11 +329,7 @@ abstract class AbstractController extends Controller
      */
     protected function getUserRepository()
     {
-        if ($this->userRepository === null) {
-            $this->userRepository = $this->get('sulu.repository.user');
-        }
-
-        return $this->userRepository;
+        return $this->get('sulu.repository.user');
     }
 
     /**
@@ -370,11 +337,7 @@ abstract class AbstractController extends Controller
      */
     protected function getRequestAnalyserResolver()
     {
-        if ($this->requestAnalyzerResolver === null) {
-            $this->requestAnalyzerResolver = $this->get('sulu_website.resolver.request_analyzer');
-        }
-
-        return $this->requestAnalyzerResolver;
+        return $this->get('sulu_website.resolver.request_analyzer');
     }
 
     /**
@@ -382,11 +345,7 @@ abstract class AbstractController extends Controller
      */
     protected function getMailHelper()
     {
-        if ($this->mailHelper === null) {
-            $this->mailHelper = $this->get('l91_sulu_website_user.mail_helper');
-        }
-
-        return $this->mailHelper;
+        return$this->get('l91_sulu_website_user.mail_helper');
     }
 
     /**

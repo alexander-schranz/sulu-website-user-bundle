@@ -17,7 +17,7 @@ class PasswordResetType extends AbstractUserType
                 new Exist([
                     'columns' => ['passwordResetToken'],
                     'entity' => $options['user_class'],
-                    'groups' => [$options['type']],
+                    'groups' => Configuration::TYPE_PASSWORD_RESET,
                     'message' => 'False token',
                 ]),
                 new NotBlank(),
@@ -45,6 +45,6 @@ class PasswordResetType extends AbstractUserType
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-        $resolver->setDefault('validation_group', Configuration::TYPE_PASSWORD_RESET);
+        $resolver->setDefault('validation_groups', Configuration::TYPE_PASSWORD_RESET);
     }
 }

@@ -45,6 +45,6 @@ class RegistrationType extends AbstractUserType
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-        $resolver->setDefault('validation_group', Configuration::TYPE_REGISTRATION);
+        $resolver->setDefault('validation_groups', Configuration::TYPE_REGISTRATION);
     }
 }
