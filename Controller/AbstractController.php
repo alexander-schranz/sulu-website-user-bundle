@@ -19,31 +19,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 abstract class AbstractController extends Controller
 {
     /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
-
-    /**
-     * @var RequestAnalyzerResolverInterface
-     */
-    private $requestAnalyzerResolver;
-
-    /**
-     * @var HandlerInterface
-     */
-    protected $formHandler;
-
-    /**
-     * @var MailHelperInterface
-     */
-    protected $mailHelper;
-
-    /**
-     * @var UserRepository
-     */
-    protected $userRepository;
-
-    /**
      * @param Request $request
      * @param string $type
      * @param mixed $data
@@ -346,11 +321,16 @@ abstract class AbstractController extends Controller
      */
     protected function getRequestAnalyser()
     {
-        if ($this->requestAnalyzer === null) {
-            $this->requestAnalyzer = $this->get('sulu_core.webspace.request_analyzer');
+        $requestAnalyzer = $this->get('sulu_core.webspace.request_analyzer.website');
+
+        // SULU BUG FIXME https://github.com/sulu-io/sulu/issues/2041
+        $portal = $requestAnalyzer->getPortal();
+        if (!$portal) {
+            $request = $this->get('request_stack')->getMasterRequest();
+            $requestAnalyzer->analyze($request);
         }
 
-        return $this->requestAnalyzer;
+        return $requestAnalyzer;
     }
 
     /**
@@ -358,11 +338,7 @@ abstract class AbstractController extends Controller
      */
     protected function getUserRepository()
     {
-        if ($this->userRepository === null) {
-            $this->userRepository = $this->get('sulu.repository.user');
-        }
-
-        return $this->userRepository;
+        return $this->get('sulu.repository.user');
     }
 
     /**
@@ -370,11 +346,7 @@ abstract class AbstractController extends Controller
      */
     protected function getRequestAnalyserResolver()
     {
-        if ($this->requestAnalyzerResolver === null) {
-            $this->requestAnalyzerResolver = $this->get('sulu_website.resolver.request_analyzer');
-        }
-
-        return $this->requestAnalyzerResolver;
+        return $this->get('sulu_website.resolver.request_analyzer');
     }
 
     /**
@@ -382,11 +354,7 @@ abstract class AbstractController extends Controller
      */
     protected function getMailHelper()
     {
-        if ($this->mailHelper === null) {
-            $this->mailHelper = $this->get('l91_sulu_website_user.mail_helper');
-        }
-
-        return $this->mailHelper;
+        return$this->get('l91_sulu_website_user.mail_helper');
     }
 
     /**
@@ -415,21 +383,24 @@ abstract class AbstractController extends Controller
      */
     private function getTemplateAttributes($custom = array())
     {
-        $requestAnalyzer = $this->getRequestAnalyser();
-        $default = array_merge(
-            [
-                'isSecurityTemplate' => true,
-                'extension' => [
-                    'excerpt' => [
+        $defaults = [
+            'isSecurityTemplate' => true,
+            'extension' => [
+                'excerpt' => [
 
-                    ],
-                    'seo' => [
-
-                    ],
                 ],
-                'content' => [],
-                'shadowBaseLocale' => null
+                'seo' => [
+
+                ],
             ],
+            'content' => [],
+            'shadowBaseLocale' => null
+        ];
+
+        $requestAnalyzer = $this->getRequestAnalyser();
+
+        $default = array_merge(
+            $defaults,
             $this->getRequestAnalyserResolver()->resolve($requestAnalyzer)
         );
 
