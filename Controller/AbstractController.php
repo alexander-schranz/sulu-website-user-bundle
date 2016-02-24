@@ -321,7 +321,16 @@ abstract class AbstractController extends Controller
      */
     protected function getRequestAnalyser()
     {
-        return $this->get('sulu_core.webspace.request_analyzer');
+        $requestAnalyzer = $this->get('sulu_core.webspace.request_analyzer.website');
+
+        // SULU BUG FIXME https://github.com/sulu-io/sulu/issues/2041
+        $portal = $requestAnalyzer->getPortal();
+        if (!$portal) {
+            $request = $this->get('request_stack')->getMasterRequest();
+            $requestAnalyzer->analyze($request);
+        }
+
+        return $requestAnalyzer;
     }
 
     /**
@@ -374,21 +383,24 @@ abstract class AbstractController extends Controller
      */
     private function getTemplateAttributes($custom = array())
     {
-        $requestAnalyzer = $this->getRequestAnalyser();
-        $default = array_merge(
-            [
-                'isSecurityTemplate' => true,
-                'extension' => [
-                    'excerpt' => [
+        $defaults = [
+            'isSecurityTemplate' => true,
+            'extension' => [
+                'excerpt' => [
 
-                    ],
-                    'seo' => [
-
-                    ],
                 ],
-                'content' => [],
-                'shadowBaseLocale' => null
+                'seo' => [
+
+                ],
             ],
+            'content' => [],
+            'shadowBaseLocale' => null
+        ];
+
+        $requestAnalyzer = $this->getRequestAnalyser();
+
+        $default = array_merge(
+            $defaults,
             $this->getRequestAnalyserResolver()->resolve($requestAnalyzer)
         );
 
