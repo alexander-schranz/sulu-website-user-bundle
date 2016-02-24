@@ -23,19 +23,25 @@ composer require l91/sulu-website-user-bundle:~1.0
 composer install
 ```
 
-### 1. Add Security Bundle to WebsiteKernel (app/WebsiteKernel.php):
+### 1. Add Security Bundle to WebsiteKernel
+
+`app/WebsiteKernel.php`:
 
 ```php
 $bundles[] = new Symfony\Bundle\SecurityBundle\SecurityBundle();
 ```
  
-### 1. Add Bundle to AbstractKernel (app/AbstractKernel.php):
+### 2. Add Bundle to AbstractKernel:
+
+`app/AbstractKernel.php`:
 
 ```php
 new L91\Sulu\Bundle\WebsiteUserBundle\L91SuluWebsiteUserBundle(),
  ```
 
-### 3. Add new routes to website routing config (app/config/website/routing.yml)
+### 3. Add new routes to routing config
+
+`app/config/website/routing.yml` and `app/config/admin/routing.yml`:
 
 ```yml
 l91_sulu_website_user:
@@ -45,13 +51,17 @@ l91_sulu_website_user:
 
 ### 4. Add Security system to your webspace
 
+`app/Resources/webspaces/<your_webspace>.xml`:
+
 ```xml
     <security>
         <system>Website</system>
     </security>
 ```
 
-### 5. Update your website security file (app/config/website/security.yml)
+### 5. Update your website security file
+
+`app/config/website/security.yml`:
 
 Example:
 
@@ -112,6 +122,8 @@ Create the following templates in your theme under `<your_theme>/templates/secur
 
 https://github.com/sulu-io/sulu/issues/1966
 
+`app/config/config.yml`:
+
 ```yml
 liip_theme:
     path_patterns:
@@ -121,7 +133,7 @@ liip_theme:
 
 ### 7. Set Config
 
-`app/config/config.yml`
+`app/config/config.yml`:
 
 **Basic:**
 
