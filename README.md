@@ -83,7 +83,7 @@ security:
 
     providers:
         sulu:
-            id: sulu_security.user_repository
+            id: sulu_security.user_provider
 
     access_control:
         - { path: /%locale%/profile, roles: ROLE_USER }
