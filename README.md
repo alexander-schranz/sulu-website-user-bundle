@@ -117,6 +117,7 @@ Create the following templates in your theme under `<your_theme>/templates/secur
  - `profile.html.twig`
  - `emails/registration-user.html.twig`
  - `emails/password-forget-user.html.twig`
+ - `embed/login.html.twig`
  
 **Update Liip Theme Bundle with your Bundle**
 
