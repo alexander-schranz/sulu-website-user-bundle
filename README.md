@@ -83,7 +83,7 @@ security:
 
     providers:
         sulu:
-            id: sulu_security.user_repository
+            id: sulu_security.user_provider
 
     access_control:
         - { path: /%locale%/profile, roles: ROLE_USER }
@@ -117,6 +117,7 @@ Create the following templates in your theme under `<your_theme>/templates/secur
  - `profile.html.twig`
  - `emails/registration-user.html.twig`
  - `emails/password-forget-user.html.twig`
+ - `embed/login.html.twig`
  
 **Update Liip Theme Bundle with your Bundle**
 

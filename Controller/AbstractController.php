@@ -321,7 +321,7 @@ abstract class AbstractController extends Controller
      */
     protected function getRequestAnalyser()
     {
-        $requestAnalyzer = $this->get('sulu_core.webspace.request_analyzer.website');
+        $requestAnalyzer = $this->get('sulu_core.webspace.request_analyzer');
 
         // SULU BUG FIXME https://github.com/sulu-io/sulu/issues/2041
         $portal = $requestAnalyzer->getPortal();
