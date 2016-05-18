@@ -1,4 +1,4 @@
-{% set confirmationUrl = app.request.schemeAndHttpHost ~ path(request.portalUrl ~ '.l91_sulu_website_user.confirmation', {'token': user.confirmationKey}) %}
+{% set confirmationUrl = app.request.schemeAndHttpHost ~ path('l91_sulu_website_user.registration',{'host': request.portalUrl, 'prefix': ''}) %}
 
 <a href="{{ confirmationUrl }}">
     {{ confirmationUrl }}
