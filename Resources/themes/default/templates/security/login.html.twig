@@ -1,6 +1,6 @@
 {% extends "BlackriverWebsiteBundle:views:master.html.twig" %}
 {% block content %}
-    <form action="{{ path('l91_sulu_website_user.login_check',{'host': request.portalUrl, 'prefix': ''}) }}" method="post">
+    <form action="{{ path('l91_sulu_website_user.login_check', request.routeParameters) }}" method="post">
         {% if error and error.message %}
             <div>
                 {{ error.message }}
@@ -27,8 +27,8 @@
         </div>
 
         <div>
-            <a href="{{ path('l91_sulu_website_user.password_forget',{'host': request.portalUrl, 'prefix': ''}) }}">Password Forget</a>
-            <a href="{{ path('l91_sulu_website_user.registration',{'host': request.portalUrl, 'prefix': ''}) }}">Registration</a>
+            <a href="{{ path('l91_sulu_website_user.password_forget', request.routeParameters) }}">Password Forget</a>
+            <a href="{{ path('l91_sulu_website_user.registration', request.routeParameters) }}">Registration</a>
         </div>
 </form>
 {% endblock %}
