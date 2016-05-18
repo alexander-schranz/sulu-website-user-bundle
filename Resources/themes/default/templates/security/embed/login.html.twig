@@ -1,8 +1,8 @@
 {% if user is defined and user %}
-    <a href="{{ path(request.portalUrl ~ '.l91_sulu_website_user.logout') }}">Logout</a>
-    <a href="{{ path(request.portalUrl ~ '.l91_sulu_website_user.profile') }}">{{ user.username }}</a>
+    <a href="{{ path('l91_sulu_website_user.logout', request.routeParameters) }}">Logout</a>
+    <a href="{{ path('l91_sulu_website_user.profile', request.routeParameters) }}">{{ user.username }}</a>
 {% else %}
-    <form action="{{ path(request.portalUrl ~ '.l91_sulu_website_user.login_check') }}" method="post">
+    <form action="{{ path('l91_sulu_website_user.login_check', request.routeParameters) }}" method="post">
         <input type="text" id="username" name="_username" value="" placeholder="Username" />
         <input type="password" id="password" name="_password" placeholder="Password" />
         <input type="submit" value="Login" />
