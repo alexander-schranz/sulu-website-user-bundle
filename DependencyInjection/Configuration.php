@@ -163,6 +163,7 @@ class Configuration implements ConfigurationInterface
                                     ->scalarNode(self::FORM_TYPE)->defaultValue('L91\Sulu\Bundle\WebsiteUserBundle\Form\Type\ConfirmationType')->end()
                                     // Confirmation Templates
                                     ->arrayNode(self::TEMPLATES)
+                                        ->addDefaultsIfNotSet()
                                         ->children()
                                             ->scalarNode(self::TEMPLATE_FORM)->defaultValue('::templates/security/confirmation.html.twig')->end()
                                             ->scalarNode(self::TEMPLATE_ADMIN)->defaultValue(null)->end()
@@ -184,6 +185,7 @@ class Configuration implements ConfigurationInterface
                                     ->scalarNode(self::FORM_TYPE)->defaultValue('L91\Sulu\Bundle\WebsiteUserBundle\Form\Type\PasswordForgetType')->end()
                                     // Password Forget Templates
                                     ->arrayNode(self::TEMPLATES)
+                                        ->addDefaultsIfNotSet()
                                         ->children()
                                             ->scalarNode(self::TEMPLATE_FORM)->defaultValue('::templates/security/password-forget.html.twig')->end()
                                             ->scalarNode(self::TEMPLATE_ADMIN)->defaultValue(null)->end()
