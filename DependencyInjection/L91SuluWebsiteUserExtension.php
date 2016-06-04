@@ -2,14 +2,14 @@
 
 namespace L91\Sulu\Bundle\WebsiteUserBundle\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * This is the class that loads and manages your bundle configuration
+ * This is the class that loads and manages your bundle configuration.
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
@@ -92,7 +92,7 @@ class L91SuluWebsiteUserExtension extends Extension
             }
         }
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
     }
 
@@ -101,10 +101,8 @@ class L91SuluWebsiteUserExtension extends Extension
      * @param $config
      * @param array $fallbackConfig
      * @param null $default
-     *
-     * @return null
      */
-    protected static function getValue($key, $config, $fallbackConfig = array(), $default = null)
+    protected static function getValue($key, $config, $fallbackConfig = [], $default = null)
     {
         if (empty($config[$key])) {
             if (!isset($fallbackConfig[$key])) {

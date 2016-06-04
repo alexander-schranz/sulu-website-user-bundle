@@ -42,7 +42,7 @@ class LoginController extends AbstractController
         return [
             // last username entered by the user
             'last_username' => $lastUsername,
-            'error'         => $error,
+            'error' => $error,
         ];
     }
 

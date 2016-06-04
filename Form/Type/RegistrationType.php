@@ -23,13 +23,13 @@ class RegistrationType extends AbstractUserType
         }
 
         $builder->add('plainPassword', 'repeated', [
-            'first_name'  => 'password',
+            'first_name' => 'password',
             'second_name' => 'confirm',
-            'type'        => 'password',
-            'mapped'      => false,
+            'type' => 'password',
+            'mapped' => false,
         ]);
 
-        $builder->add('contact', new $options['contact_type'], $options['contact_type_options']);
+        $builder->add('contact', new $options['contact_type'](), $options['contact_type_options']);
 
         $builder->add('submit', 'submit');
     }

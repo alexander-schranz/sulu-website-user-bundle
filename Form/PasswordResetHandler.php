@@ -20,6 +20,7 @@ class PasswordResetHandler extends AbstractUserHandler
 
     /**
      * PasswordResetHandler constructor.
+     *
      * @param EntityManagerInterface $entityManager
      * @param UserRepository $userRepository
      * @param EncoderFactoryInterface $securityEncoderFactory
@@ -47,7 +48,7 @@ class PasswordResetHandler extends AbstractUserHandler
         try {
             $user = $this->userRepository->findUserByToken($data['token']);
         } catch (NoResultException $e) {
-            return null;
+            return;
         }
 
         if ($user instanceof BaseUser) {
