@@ -296,9 +296,8 @@ abstract class AbstractController extends Controller
         $system = null;
         $webSpace = $this->getRequestAnalyser()->getWebspace();
 
-        if (!$webSpaceKey) {
+        if ($webSpaceKey) {
             $webSpaceManager = $this->get('sulu_core.webspace.webspace_manager');
-
             $webSpace = $webSpaceManager->findWebspaceByKey($webSpaceKey);
         }
 

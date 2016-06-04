@@ -1,20 +1,3 @@
-# Login
-l91_sulu_website_user.login:
-    path: /login
-    defaults:
-        _controller: L91SuluWebsiteUserBundle:Login:login
-
-l91_sulu_website_user.login_check:
-    path: /login-check
-    # no controller is bound to this route
-    # as it's handled by the Security system
-
-# Logout
-l91_sulu_website_user.logout:
-    path: /logout
-    # no controller is bound to this route
-    # as it's handled by the Security system
-
 # Password Forget
 l91_sulu_website_user.password_forget:
     path: /password-forget
@@ -33,7 +16,7 @@ l91_sulu_website_user.registration:
     defaults:
         _controller: L91SuluWebsiteUserBundle:Registration:registration
 
-# Registration
+# Cross Registration
 l91_sulu_website_user.cross_registration:
     path: /registration/{webSpaceKey}
     defaults:
@@ -50,3 +33,20 @@ l91_sulu_website_user.profile:
     path: /profile
     defaults:
         _controller: L91SuluWebsiteUserBundle:Profile:profile
+
+# Login
+l91_sulu_website_user.login:
+    path: /login
+    defaults:
+        _controller: L91SuluWebsiteUserBundle:Login:login
+
+l91_sulu_website_user.login_check:
+    path: /login-check
+    # no controller is bound to this route
+    # as it's handled by the Security system
+
+# Logout
+l91_sulu_website_user.logout:
+    path: /logout
+    # no controller is bound to this route
+    # as it's handled by the Security system

@@ -8,6 +8,8 @@ use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CrossRegistrationController extends AbstractController
 {
@@ -16,14 +18,22 @@ class CrossRegistrationController extends AbstractController
      * @param string $webSpaceKey
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @throws AccessDeniedHttpException
      */
     public function crossRegistrationAction(Request $request, $webSpaceKey)
     {
         $this->checkSecuritySystem(Configuration::TYPE_CROSS_REGISTRATION);
 
+        $user = $this->getUser();
+
+        if (!$user) {
+            throw new AccessDeniedHttpException();
+        }
+
         $userRole = new UserRole();
         $userRole->setRole($this->getWebSpaceRole($webSpaceKey));
-        $userRole->setUser($this->getUser());
+        $userRole->setUser($user);
         $userRole->setLocale($this->getWebSpaceLocales($webSpaceKey));
 
         return $this->handleForm(
@@ -42,6 +52,16 @@ class CrossRegistrationController extends AbstractController
     {
         $roleName = $this->getConfig(null, Configuration::ROLE, $webSpaceKey);
 
+        if (!$roleName) {
+            throw new NotFoundHttpException(
+                sprintf(
+                    'Webspace "%s" not found',
+                    $webSpaceKey
+                )
+            );
+        }
+
+        // Get or Create Role
         $roleRepository = $this->get('sulu.repository.role');
 
         $system = $this->getWebSpaceSystem($webSpaceKey);
