@@ -20,6 +20,7 @@ class Configuration implements ConfigurationInterface
 
     const TYPE_LOGIN = 'login';
     const TYPE_REGISTRATION = 'registration';
+    const TYPE_CROSS_REGISTRATION = 'cross_registration';
     const TYPE_CONFIRMATION = 'confirmation';
     const TYPE_PASSWORD_FORGET = 'password_forget';
     const TYPE_PASSWORD_RESET = 'password_reset';
@@ -55,6 +56,7 @@ class Configuration implements ConfigurationInterface
     public static $TYPES = [
         self::TYPE_LOGIN,
         self::TYPE_REGISTRATION,
+        self::TYPE_CROSS_REGISTRATION,
         self::TYPE_CONFIRMATION,
         self::TYPE_PASSWORD_FORGET,
         self::TYPE_PASSWORD_RESET,
@@ -144,6 +146,28 @@ class Configuration implements ConfigurationInterface
                                             ->scalarNode(self::TEMPLATE_FORM)->defaultValue('::templates/security/registration.html.twig')->end()
                                             ->scalarNode(self::TEMPLATE_ADMIN)->defaultValue(null)->end()
                                             ->scalarNode(self::TEMPLATE_USER)->defaultValue('::templates/security/emails/registration-user.html.twig')->end()
+                                        ->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                            // Cross Registration
+                            ->arrayNode(self::TYPE_CROSS_REGISTRATION)
+                                ->addDefaultsIfNotSet()
+                                ->children()
+                                    // Registration Mail Config
+                                    ->scalarNode(self::MAIL_FROM)->defaultValue(null)->end()
+                                    ->scalarNode(self::MAIL_TO)->defaultValue(null)->end()
+                                    ->scalarNode(self::MAIL_REPLY_TO)->defaultValue(null)->end()
+                                    ->scalarNode(self::MAIL_SUBJECT)->defaultValue(null)->end()
+                                    // Registration Form
+                                    ->scalarNode(self::FORM_TYPE)->defaultValue('L91\Sulu\Bundle\WebsiteUserBundle\Form\Type\CrossRegistrationType')->end()
+                                    // Registration Templates
+                                    ->arrayNode(self::TEMPLATES)
+                                        ->addDefaultsIfNotSet()
+                                        ->children()
+                                            ->scalarNode(self::TEMPLATE_FORM)->defaultValue('::templates/security/cross-registration.html.twig')->end()
+                                            ->scalarNode(self::TEMPLATE_ADMIN)->defaultValue(null)->end()
+                                            ->scalarNode(self::TEMPLATE_USER)->defaultValue(null)->end()
                                         ->end()
                                     ->end()
                                 ->end()

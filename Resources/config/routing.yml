@@ -33,6 +33,12 @@ l91_sulu_website_user.registration:
     defaults:
         _controller: L91SuluWebsiteUserBundle:Registration:registration
 
+# Registration
+l91_sulu_website_user.cross_registration:
+    path: /registration/{webSpaceKey}
+    defaults:
+        _controller: L91SuluWebsiteUserBundle:CrossRegistration:crossRegistration
+
 # Confirmation
 l91_sulu_website_user.confirmation:
     path: /confirmation

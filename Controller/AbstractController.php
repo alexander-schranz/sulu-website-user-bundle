@@ -220,16 +220,21 @@ abstract class AbstractController extends Controller
     }
 
     /**
-     * @param $type
-     * @param $key
+     * @param string $type
+     * @param string $key
+     * @param string $webSpaceKey
      *
      * @return string
      */
-    protected function getConfig($type, $key)
+    protected function getConfig($type, $key, $webSpaceKey = null)
     {
+        if (!$webSpaceKey) {
+            $webSpaceKey = $this->getWebSpaceKey();
+        }
+
         $parameter =
             Configuration::ROOT . '.' .
-            $this->getWebSpaceKey() .
+            $webSpaceKey .
             ($type ? '.' . $type : '') . '.'
             . $key;
 
@@ -282,13 +287,22 @@ abstract class AbstractController extends Controller
     }
 
     /**
+     * @param string $webSpaceKey
+     *
      * @return string
      */
-    protected function getWebSpaceSystem()
+    protected function getWebSpaceSystem($webSpaceKey = null)
     {
         $system = null;
+        $webSpace = $this->getRequestAnalyser()->getWebspace();
 
-        if ($webSpace = $this->getRequestAnalyser()->getWebspace()) {
+        if (!$webSpaceKey) {
+            $webSpaceManager = $this->get('sulu_core.webspace.webspace_manager');
+
+            $webSpace = $webSpaceManager->findWebspaceByKey($webSpaceKey);
+        }
+
+        if ($webSpace) {
             $security = $webSpace->getSecurity();
 
             if ($security) {
@@ -300,11 +314,19 @@ abstract class AbstractController extends Controller
     }
 
     /**
+     * @param string $webSpaceKey
+     *
      * @return array
      */
-    protected function getWebSpaceLocales()
+    protected function getWebSpaceLocales($webSpaceKey = null)
     {
         $webSpace = $this->getRequestAnalyser()->getWebspace();
+
+        if (!$webSpaceKey) {
+            $webSpaceManager = $this->get('sulu_core.webspace.webspace_manager');
+
+            $webSpace = $webSpaceManager->findWebspaceByKey($webSpaceKey);
+        }
 
         $locales = [];
         if ($webSpace) {
