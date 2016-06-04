@@ -3,8 +3,6 @@
 namespace L91\Sulu\Bundle\WebsiteUserBundle\Controller;
 
 use L91\Sulu\Bundle\WebsiteUserBundle\DependencyInjection\Configuration;
-use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Symfony\Component\HttpFoundation\Request;
