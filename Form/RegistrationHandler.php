@@ -95,7 +95,7 @@ class RegistrationHandler extends AbstractUserHandler
     {
         $role = $this->roleRepository->findOneBy([
             'system' => $system,
-            'name' => $roleName
+            'name' => $roleName,
         ]);
 
         // create role when not exists

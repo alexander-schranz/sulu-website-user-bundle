@@ -16,7 +16,7 @@ abstract class AbstractContactType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'data_class' => Contact::class,
             'contact_address_type' => ContactAddressType::class,
             'contact_address_type_options' => ['label' => false],
@@ -24,6 +24,6 @@ abstract class AbstractContactType extends AbstractType
             'address_type_options' => ['label' => false],
             'type' => null,
             'locale' => null,
-        ));
+        ]);
     }
 }
