@@ -10,6 +10,7 @@ interface MailHelperInterface
      * @param string $body
      * @param string $replayTo
      * @param array $attachments
+     *
      * @return int
      */
     public function send($from, $to, $subject, $body, $replayTo = null, $attachments = []);

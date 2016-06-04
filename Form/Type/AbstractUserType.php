@@ -17,7 +17,7 @@ abstract class AbstractUserType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'user_class' => User::class,
             'contact_type' => ContactType::class,
             'contact_type_options' => [],
@@ -30,7 +30,7 @@ abstract class AbstractUserType extends AbstractType
             'locales' => [
                 'en' => 'EN',
                 'de' => 'DE',
-            ]
-        ));
+            ],
+        ]);
     }
 }

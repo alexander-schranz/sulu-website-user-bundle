@@ -99,7 +99,8 @@ abstract class AbstractController extends Controller
      *
      * @return array
      */
-    protected function getFormOptions(Request $request, $type, $options) {
+    protected function getFormOptions(Request $request, $type, $options)
+    {
         $defaultOptions = [
             'locale' => $request->getLocale(),
             'locales' => $this->getWebSpaceLocales(),
@@ -233,7 +234,7 @@ abstract class AbstractController extends Controller
             . $key;
 
         if (!$this->container->hasParameter($parameter)) {
-            return null;
+            return;
         }
 
         return $this->container->getParameter($parameter);
@@ -360,7 +361,7 @@ abstract class AbstractController extends Controller
     /**
      * {@inheritdoc}
      */
-    public function render($view, array $parameters = array(), Response $response = null)
+    public function render($view, array $parameters = [], Response $response = null)
     {
         return parent::render(
             $view,
@@ -372,16 +373,17 @@ abstract class AbstractController extends Controller
     /**
      * {@inheritdoc}
      */
-    public function renderView($view, array $parameters = array())
+    public function renderView($view, array $parameters = [])
     {
         return parent::renderView($view, $this->getTemplateAttributes($parameters));
     }
 
     /**
      * @param array $custom
+     *
      * @return array
      */
-    private function getTemplateAttributes($custom = array())
+    private function getTemplateAttributes($custom = [])
     {
         $defaults = [
             'isSecurityTemplate' => true,
@@ -394,7 +396,7 @@ abstract class AbstractController extends Controller
                 ],
             ],
             'content' => [],
-            'shadowBaseLocale' => null
+            'shadowBaseLocale' => null,
         ];
 
         $requestAnalyzer = $this->getRequestAnalyser();

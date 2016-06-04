@@ -30,7 +30,7 @@ class ConfirmationType extends AbstractUserType
 
     public function getName()
     {
-        return null;
+        return;
     }
 
     /**

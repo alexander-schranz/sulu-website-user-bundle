@@ -10,6 +10,7 @@ class ConfirmationController extends AbstractController
 {
     /**
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function confirmationAction(Request $request)

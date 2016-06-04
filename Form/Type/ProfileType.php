@@ -43,7 +43,7 @@ class ProfileType extends AbstractUserType
             ]),
         ]);
 
-        $builder->add('contact', new $options['contact_type'], $options['contact_type_options']);
+        $builder->add('contact', new $options['contact_type'](), $options['contact_type_options']);
 
         $builder->add('submit', 'submit');
     }
@@ -61,10 +61,10 @@ class ProfileType extends AbstractUserType
         parent::configureOptions($resolver);
         $resolver->setDefault('validation_groups', function (FormInterface $form) {
             if (!empty($form->get('password')->getData())) {
-                return array('profile', 'profile_password');
+                return ['profile', 'profile_password'];
             }
 
-            return array('profile');
+            return ['profile'];
         });
     }
 }

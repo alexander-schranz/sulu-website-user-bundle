@@ -48,7 +48,7 @@ class MailHelper implements MailHelperInterface
 
         // set attachments
         if (count($attachments) > 0) {
-            foreach($attachments as $file) {
+            foreach ($attachments as $file) {
                 if ($file instanceof \SplFileInfo) {
                     $path = $file->getPathName();
                     $name = $file->getFileName();
