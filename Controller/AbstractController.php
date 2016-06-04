@@ -421,11 +421,9 @@ abstract class AbstractController extends Controller
             'shadowBaseLocale' => null,
         ];
 
-        $requestAnalyzer = $this->getRequestAnalyser();
-
         $default = array_merge(
             $defaults,
-            $this->getRequestAnalyserResolver()->resolve($requestAnalyzer)
+            $this->getResolverParameters()
         );
 
         if (!isset($custom['urls'])) {
@@ -433,7 +431,7 @@ abstract class AbstractController extends Controller
             $request = $this->get('request_stack')->getCurrentRequest();
             $urls = [];
             if ($request->get('_route')) {
-                foreach ($requestAnalyzer->getWebspace()->getLocalizations() as $localization) {
+                foreach ($this->getRequestAnalyser()->getWebspace()->getLocalizations() as $localization) {
                     $url = $router->generate(
                         $request->get('_route'),
                         $request->get('_route_params')
@@ -441,10 +439,10 @@ abstract class AbstractController extends Controller
 
                     // will remove locale because it will be added automatically
                     if (preg_match('/^\/[a-z]{2}(-[a-z]{2})?+\/(.*)/', $url)) {
-                        $url = substr($url, strlen($localization->getLocalization()) + 1);
+                        $url = substr($url, strlen($localization->getLocale()) + 1);
                     }
 
-                    $urls[$localization->getLocalization()] = $url;
+                    $urls[$localization->getLocale()] = $url;
                 }
             }
 
@@ -455,6 +453,46 @@ abstract class AbstractController extends Controller
             $default,
             $custom
         );
+    }
+
+    /**
+     * @return array
+     */
+    protected function getResolverParameters()
+    {
+        $requestAnalyzer = $this->getRequestAnalyser();
+
+        // Fixes: https://github.com/sulu/sulu/issues/2449
+        $currentLocalization = $requestAnalyzer->getCurrentLocalization();
+
+        if ($currentLocalization) {
+            $resolverParameters = $this->getRequestAnalyserResolver()->resolve($requestAnalyzer);
+        } else {
+            // Fixes: https://github.com/sulu/sulu/issues/2449
+            $defaultLocalization = $requestAnalyzer->getPortal()->getDefaultLocalization();
+            $defaultLocale = $defaultLocalization ? $defaultLocalization->getLocalization() : null;
+
+            $resolverParameters = [
+                'request' => [
+                    'webspaceKey' => $requestAnalyzer->getWebspace()->getKey(),
+                    'defaultLocale' => $defaultLocale,
+                    'locale' => $defaultLocalization->getLocalization(),
+                    'portalUrl' => $requestAnalyzer->getPortalUrl(),
+                    'resourceLocatorPrefix' => $requestAnalyzer->getResourceLocatorPrefix(),
+                    'resourceLocator' => $requestAnalyzer->getResourceLocator(),
+                    'get' => $requestAnalyzer->getGetParameters(),
+                    'post' => $requestAnalyzer->getPostParameters(),
+                    'analyticsKey' => $requestAnalyzer->getAnalyticsKey(),
+                    'routeParameters' => [
+                        'host' => $requestAnalyzer->getPortalInformation()->getHost(),
+                        'prefix' => $requestAnalyzer->getPortalInformation()->getPrefix(),
+                    ],
+                ],
+            ];
+        }
+        // Fix End
+
+        return $resolverParameters;
     }
 
     /**
