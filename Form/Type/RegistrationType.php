@@ -31,6 +31,11 @@ class RegistrationType extends AbstractUserType
 
         $builder->add('contact', new $options['contact_type'](), $options['contact_type_options']);
 
+        $builder->add('terms', 'checkbox', [
+            'mapped' => false,
+            'required' => true,
+        ]);
+
         $builder->add('submit', 'submit');
     }
 

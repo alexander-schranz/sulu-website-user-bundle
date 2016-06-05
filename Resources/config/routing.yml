@@ -4,11 +4,6 @@ l91_sulu_website_user.login:
     defaults:
         _controller: L91SuluWebsiteUserBundle:Login:login
 
-l91_sulu_website_user.login_check:
-    path: /login-check
-    # no controller is bound to this route
-    # as it's handled by the Security system
-
 # Logout
 l91_sulu_website_user.logout:
     path: /logout
