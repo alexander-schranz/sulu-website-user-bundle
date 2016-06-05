@@ -33,6 +33,7 @@ class RegistrationType extends AbstractUserType
 
         $builder->add('terms', 'checkbox', [
             'mapped' => false,
+            'required' => true,
         ]);
 
         $builder->add('submit', 'submit');

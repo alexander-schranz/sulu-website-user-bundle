@@ -86,15 +86,15 @@ security:
             id: sulu_security.user_provider
 
     access_control:
-        - { path: l91_sulu_website_user.profile, roles: ROLE_USER }
+        - { path: /profile, roles: ROLE_USER }
 
     firewalls:
         website:
-            pattern: ^/
+            pattern: (login|profile|logout)
             anonymous: ~
             form_login:
                 login_path: l91_sulu_website_user.login
-                check_path: l91_sulu_website_user.login_check
+                check_path: l91_sulu_website_user.login
             logout:
                 path: l91_sulu_website_user.logout
                 target: l91_sulu_website_user.login
