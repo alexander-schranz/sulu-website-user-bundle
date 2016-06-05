@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityRepository;
 use L91\Sulu\Bundle\WebsiteUserBundle\DependencyInjection\Configuration;
 use Sulu\Bundle\SecurityBundle\Entity\BaseUser;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
+use Sulu\Bundle\SecurityBundle\Entity\RoleRepository;
 use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\SecurityBundle\Util\TokenGeneratorInterface;
@@ -37,6 +38,7 @@ class RegistrationHandler extends AbstractUserHandler
      * @param EncoderFactoryInterface $securityEncoderFactory
      * @param EntityManagerInterface $entityManager
      * @param UserRepository $userRepository
+     * @param RoleRepository $roleRepository
      * @param TokenGeneratorInterface $tokenGenerator
      */
     public function __construct(
@@ -44,6 +46,7 @@ class RegistrationHandler extends AbstractUserHandler
         EncoderFactoryInterface $securityEncoderFactory,
         EntityManagerInterface $entityManager,
         UserRepository $userRepository,
+        RoleRepository $roleRepository,
         TokenGeneratorInterface $tokenGenerator
     ) {
         $this->saltGenerator = $saltGenerator;
@@ -51,7 +54,7 @@ class RegistrationHandler extends AbstractUserHandler
         $this->entityManager = $entityManager;
         $this->tokenGenerator = $tokenGenerator;
         $this->userRepository = $userRepository;
-        $this->roleRepository = $this->entityManager->getRepository(Role::class);
+        $this->roleRepository = $roleRepository;
     }
 
     /**

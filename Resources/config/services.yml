@@ -18,7 +18,7 @@ services:
     # Registration Handler
     l91_sulu_website_user.registration.handler:
         class: L91\Sulu\Bundle\WebsiteUserBundle\Form\RegistrationHandler
-        arguments: [@sulu_security.salt_generator, @security.encoder_factory, @doctrine.orm.entity_manager, @sulu.repository.user, @sulu_security.token_generator]
+        arguments: [@sulu_security.salt_generator, @security.encoder_factory, @doctrine.orm.entity_manager, @sulu.repository.user, @sulu.repository.role, @sulu_security.token_generator]
 
     # Profile Handler
     l91_sulu_website_user.profile.handler:
