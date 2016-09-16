@@ -1,5 +1,14 @@
 # Sulu Website User Bundle
 
+## WE MOVED!!!
+
+We did a complete rewrite of the bundle for sulu 1.3.0.
+Use the following bundle for all future uses:
+
+https://github.com/sulu/SuluCommunityBundle
+
+---
+
 ## When use it?
 
 You use Sulu to build an application, intranet, shop, ... where users can login, register and need to manage their 
